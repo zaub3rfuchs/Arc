@@ -1,6 +1,6 @@
 #include <Arc.h>
 
-class Sandbox : public Arc::Application
+class Sandbox : public ArcEngine::Application
 {
 public:
 	Sandbox() 
@@ -13,7 +13,7 @@ public:
 	}
 };
 
-Arc::Application* Arc::CreateApplication()
+ArcEngine::Application* ArcEngine::CreateApplication()
 {
 	return new Sandbox();
 }

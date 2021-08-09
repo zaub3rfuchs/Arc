@@ -1,8 +1,17 @@
+#include "apch.h"
+
 #include "Application.h"
-namespace Arc {
+
+#include "Arc/Events/ApplicationEvent.h"
+#include "Arc/Log.h"
+
+
+
+namespace ArcEngine {
+
 	Application::Application()
 	{
-
+		m_Window = std::unique_ptr<Window>(Window::Create());
 	}
 
 	Application::~Application()
@@ -12,7 +21,8 @@ namespace Arc {
 
 	void Application::Run()
 	{
-		while (true);
+		while (m_Running)
+			m_Window->OnUpdate();
 	}
 
 }
