@@ -3,7 +3,7 @@
 #include "Core.h"
 #include "Events/Event.h"
 #include "Window.h"
-
+#include "Arc/Events/ApplicationEvent.h"
 namespace ArcEngine {
 
 	class ARC_API Application
@@ -13,7 +13,11 @@ namespace ArcEngine {
 		virtual ~Application();
 
 		void Run();
+
+		void OnEvent(Event& e);
 	private:
+		bool OnWindowClose(WindowCloseEvent& e);
+
 		std::unique_ptr<Window> m_Window;
 		bool m_Running = true;
 	};
