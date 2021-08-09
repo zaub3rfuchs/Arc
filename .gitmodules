@@ -1,0 +1,6 @@
+[submodule "Arc/vendor/spdlog"]
+	path = Arc/vendor/spdlog
+	url = https://github.com/gabime/spdlog
+[submodule "Arc/vendor/GLFW"]
+	path = Arc/vendor/GLFW
+	url = https://github.com/zaub3rfuchs/glfw
