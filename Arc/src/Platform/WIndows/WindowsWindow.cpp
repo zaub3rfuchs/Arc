@@ -5,6 +5,9 @@
 #include "Arc/Events/MouseEvent.h"
 #include "Arc/Events/KeyEvent.h"
 
+#include <Glad/glad.h>
+
+
 namespace ArcEngine {
 
 	static bool s_GLFWInitialized = false;
@@ -48,7 +51,8 @@ namespace ArcEngine {
 
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);
-
+		int status = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+		ARC_CORE_ASSERT(status, "Failed to initialize Glad!");
 		// Set the Pointer to our window data to receive callbacks
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);

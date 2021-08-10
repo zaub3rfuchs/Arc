@@ -1,9 +1,9 @@
 #include "apch.h"
-
 #include "Application.h"
 
-
 #include "Arc/Log.h"
+
+#include <glad/glad.h>
 
 //binds the OnEvent "member" function to the EventCallbackFn
 #define BIND_EVENT_FN(x) std::bind(&x, this, std::placeholders::_1)
@@ -14,6 +14,7 @@ namespace ArcEngine {
 	{
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(BIND_EVENT_FN(Application::OnEvent));
+
 	}
 
 	Application::~Application()
@@ -51,8 +52,8 @@ namespace ArcEngine {
 	{
 		while (m_Running)
 		{
-			/*		glClearColor(1, 0, 1, 1);
-					glClear(GL_COLOR_BUFFER_BIT);*/
+			glClearColor(1, 0, 1, 1);
+			glClear(GL_COLOR_BUFFER_BIT);
 			
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
