@@ -7,8 +7,14 @@
     <Filter Include="Arc\Events">
       <UniqueIdentifier>{FF09B244-EBC1-F391-54C9-CCED40A08E82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Arc\ImGui">
+      <UniqueIdentifier>{E5FBD3F2-5166-8869-9AA4-390F064E66BE}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Platform">
       <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\OpenGL">
+      <UniqueIdentifier>{1E7D2C1D-8A08-9AE1-9319-1DD6FF23F6E1}</UniqueIdentifier>
     </Filter>
     <Filter Include="Platform\WIndows">
       <UniqueIdentifier>{44E732D0-30E0-5122-5912-37A7456A312E}</UniqueIdentifier>
@@ -37,6 +43,9 @@
     <ClInclude Include="src\Arc\Events\MouseEvent.h">
       <Filter>Arc\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Arc\ImGui\ImGuiLayer.h">
+      <Filter>Arc\ImGui</Filter>
+    </ClInclude>
     <ClInclude Include="src\Arc\Layer.h">
       <Filter>Arc</Filter>
     </ClInclude>
@@ -49,6 +58,9 @@
     <ClInclude Include="src\Arc\Window.h">
       <Filter>Arc</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.h">
+      <Filter>Platform\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\WIndows\WindowsWindow.h">
       <Filter>Platform\WIndows</Filter>
     </ClInclude>
@@ -58,6 +70,9 @@
     <ClCompile Include="src\Arc\Application.cpp">
       <Filter>Arc</Filter>
     </ClCompile>
+    <ClCompile Include="src\Arc\ImGui\ImGuiLayer.cpp">
+      <Filter>Arc\ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="src\Arc\Layer.cpp">
       <Filter>Arc</Filter>
     </ClCompile>
@@ -66,6 +81,9 @@
     </ClCompile>
     <ClCompile Include="src\Arc\Log.cpp">
       <Filter>Arc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\ImGuiOpenGLRenderer.cpp">
+      <Filter>Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\WIndows\WindowsWindow.cpp">
       <Filter>Platform\WIndows</Filter>

@@ -35,6 +35,7 @@ public:
 	Sandbox() 
 	{
 		PushLayer(new ExampleLayer());
+		PushOverlay(new ArcEngine::ImGuiLayer());
 	}
 	~Sandbox() 
 	{
