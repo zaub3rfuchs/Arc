@@ -5,17 +5,19 @@ workspace "Arc"
 	{
 		"Debug",
 		"Release",
-		"dist"
+		"Dist"
 	}
 
-outputdir = "%{cfg.buildcfg}-%{cfg.system}-{cfg.architecture}"
+outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 
 --Include directories relative to root folder (solution directory)
 IncludeDir = {}
 IncludeDir["GLFW"] = "Arc/vendor/GLFW/include"
+IncludeDir["GLAD"] = "Arc/vendor/GLAD/include"
 
 include "Arc/vendor/GLFW"
+include "Arc/vendor/GLAD"
 
 project "Arc"
 	location "Arc"
@@ -39,17 +41,19 @@ project "Arc"
 		"%{prj.name}/src",
 		"%{prj.name}/vendor/spdlog/include",
 		"%{IncludeDir.GLFW}"
+		"%{IncludeDir.GLAD}"
 	}
 
 	links
 	{
 		"GLFW",
+		"GLAD",
 		"opengl32.lib"
 	}
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "On"
+		staticruntime "Off"
 		systemversion "latest"
 
 		defines
@@ -66,14 +70,17 @@ project "Arc"
 		
 		filter "configurations:Debug"
 			defines "ARC_DEBUG"
+			buildoptions "/MDd"
 			symbols "On"
 
 		filter "configurations:Release"
 			defines "ARC_RELEASE"
+			buildoptions "/MD"
 			optimize "On"
 
 		filter "configurations:Dist"
 			defines "ARC_DIST"
+			buildoptions "/MD"
 			optimize "On"
 
 		--filter {"system:windows", "configurations:Release"}
@@ -106,7 +113,7 @@ project "Sandbox"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "On"
+		staticruntime "Off"
 		systemversion "latest"
 
 		defines
@@ -116,12 +123,15 @@ project "Sandbox"
 		
 		filter "configurations:Debug"
 			defines "ARC_DEBUG"
+			buildoptions "/MDd"
 			symbols "On"
 
 		filter "configurations:Release"
 			defines "ARC_RELEASE"
+			buildoptions "/MD"
 			optimize "On"
 
 		filter "configurations:Dist"
 			defines "ARC_DIST"
+			buildoptions "/MD"
 			optimize "On"

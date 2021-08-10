@@ -7,6 +7,12 @@
     <Filter Include="Arc\Events">
       <UniqueIdentifier>{FF09B244-EBC1-F391-54C9-CCED40A08E82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\WIndows">
+      <UniqueIdentifier>{44E732D0-30E0-5122-5912-37A7456A312E}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Arc.h" />
@@ -31,21 +37,39 @@
     <ClInclude Include="src\Arc\Events\MouseEvent.h">
       <Filter>Arc\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Arc\Layer.h">
+      <Filter>Arc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\LayerStack.h">
+      <Filter>Arc</Filter>
+    </ClInclude>
     <ClInclude Include="src\Arc\Log.h">
       <Filter>Arc</Filter>
     </ClInclude>
+    <ClInclude Include="src\Arc\Window.h">
+      <Filter>Arc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\WIndows\WindowsWindow.h">
+      <Filter>Platform\WIndows</Filter>
+    </ClInclude>
     <ClInclude Include="src\apch.h" />
-    <ClInclude Include="src\Platform\WIndows\WindowsWindow.h" />
-    <ClInclude Include="src\Arc\Window.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Arc\Application.cpp">
       <Filter>Arc</Filter>
     </ClCompile>
+    <ClCompile Include="src\Arc\Layer.cpp">
+      <Filter>Arc</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Arc\LayerStack.cpp">
+      <Filter>Arc</Filter>
+    </ClCompile>
     <ClCompile Include="src\Arc\Log.cpp">
       <Filter>Arc</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\WIndows\WindowsWindow.cpp">
+      <Filter>Platform\WIndows</Filter>
+    </ClCompile>
     <ClCompile Include="src\apch.cpp" />
-    <ClCompile Include="src\Platform\WIndows\WindowsWindow.cpp" />
   </ItemGroup>
 </Project>

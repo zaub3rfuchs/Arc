@@ -48,19 +48,22 @@ namespace ArcEngine {
 
 		m_Window = glfwCreateWindow((int)props.Width, (int)props.Height, m_Data.Title.c_str(), nullptr, nullptr);
 		glfwMakeContextCurrent(m_Window);
-		// pass the struct of data 
+
+		// Set the Pointer to our window data to receive callbacks
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		SetVSync(true);
 
 		// Set GLFW callbacks
 		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
 		{
-			//cast to WindowData* then dereference it
+			//cast the pointer back to our WindowDataReference
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			//set our windowData width/height to the new Windowsize
 			data.Width = width;
 			data.Height = height;
-
+			//create WindowResizeEvent with width/height
 			WindowResizeEvent event(width, height);
+			//call the CallbackFunction which is set by creation (application::OnEvent) with the WindowResizeEvent
 			data.EventCallback(event);
 		});
 

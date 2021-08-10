@@ -21,6 +21,7 @@ namespace ArcEngine {
 			return ss.str();
 		}
 
+		//set some class type function
 		EVENT_CLASS_TYPE(WindowResize)
 		EVENT_CLASS_CATEGORY(EventCategoryApplication)
 	private:
