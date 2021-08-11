@@ -7,6 +7,11 @@
 #include "Arc/Log.h"
 #include "Arc/ImGui/ImGuiLayer.h"
 
+// input
+#include "Arc/Input.h"
+#include "Arc/KeyCodes.h"
+#include "Arc/MouseCodes.h"
+
 // --Entry Point
 #include "Arc/EntryPoint.h";
 // -------------

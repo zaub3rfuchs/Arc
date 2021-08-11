@@ -67,6 +67,8 @@
     <ClInclude Include="src\apch.h" />
     <ClInclude Include="src\Arc\Input.h" />
     <ClInclude Include="src\Platform\WIndows\WindowsInput.h" />
+    <ClInclude Include="src\Arc\KeyCodes.h" />
+    <ClInclude Include="src\Arc\MouseCodes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Arc\Application.cpp">
