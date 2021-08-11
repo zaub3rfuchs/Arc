@@ -1,5 +1,6 @@
 workspace "Arc"
 	architecture "x64"
+	startproject "Sandbox"
 
 	configurations
 	{
@@ -17,14 +18,18 @@ IncludeDir["GLFW"] = "Arc/vendor/GLFW/include"
 IncludeDir["Glad"] = "Arc/vendor/Glad/include"
 IncludeDir["imGui"] = "Arc/vendor/imgui"
 
-include "Arc/vendor/GLFW"
-include "Arc/vendor/Glad"
-include "Arc/vendor/imgui"
+group "Dependencies"
+	include "Arc/vendor/GLFW"
+	include "Arc/vendor/Glad"
+	include "Arc/vendor/imgui"
+
+group ""
 
 project "Arc"
 	location "Arc"
 	kind "SharedLib"
 	language "C++"
+	staticruntime "Off"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -57,7 +62,6 @@ project "Arc"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "Off"
 		systemversion "latest"
 
 		defines
@@ -69,23 +73,23 @@ project "Arc"
 
 		postbuildcommands
 		{
-			("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .. "/Sandbox")
+			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
 		}
 
 		
 		filter "configurations:Debug"
 			defines "ARC_DEBUG"
-			buildoptions "/MDd"
+			runtime "Debug"
 			symbols "On"
 
 		filter "configurations:Release"
 			defines "ARC_RELEASE"
-			buildoptions "/MD"
+			runtime "Release"
 			optimize "On"
 
 		filter "configurations:Dist"
 			defines "ARC_DIST"
-			buildoptions "/MD"
+			runtime "Release"
 			optimize "On"
 
 		--filter {"system:windows", "configurations:Release"}
@@ -95,6 +99,8 @@ project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
+	staticruntime "Off"
+
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -118,7 +124,6 @@ project "Sandbox"
 
 	filter "system:windows"
 		cppdialect "C++17"
-		staticruntime "Off"
 		systemversion "latest"
 
 		defines
@@ -128,15 +133,15 @@ project "Sandbox"
 		
 		filter "configurations:Debug"
 			defines "ARC_DEBUG"
-			buildoptions "/MDd"
+			runtime "Debug"
 			symbols "On"
 
 		filter "configurations:Release"
 			defines "ARC_RELEASE"
-			buildoptions "/MD"
+			runtime "Release"
 			optimize "On"
 
 		filter "configurations:Dist"
 			defines "ARC_DIST"
-			buildoptions "/MD"
+			runtime "Release"
 			optimize "On"

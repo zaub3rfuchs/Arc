@@ -65,6 +65,8 @@
       <Filter>Platform\WIndows</Filter>
     </ClInclude>
     <ClInclude Include="src\apch.h" />
+    <ClInclude Include="src\Arc\Input.h" />
+    <ClInclude Include="src\Platform\WIndows\WindowsInput.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Arc\Application.cpp">
@@ -89,5 +91,6 @@
       <Filter>Platform\WIndows</Filter>
     </ClCompile>
     <ClCompile Include="src\apch.cpp" />
+    <ClCompile Include="src\Platform\WIndows\WindowsInput.cpp" />
   </ItemGroup>
 </Project>
