@@ -20,3 +20,5 @@
 
 
 #define BIT(x) (1 << x) // bitfield
+
+#define ARC_BIND_EVENT_FN(function) std::bind(&function, this, std::placeholders::_1)
