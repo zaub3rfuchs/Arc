@@ -1,8 +1,9 @@
 #include "apch.h"
 #include "WindowsInput.h"
 
-#include <GLFW/glfw3.h>
 #include "Arc/Application.h"
+#include <GLFW/glfw3.h>
+
 
 namespace ArcEngine {
 

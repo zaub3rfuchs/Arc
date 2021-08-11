@@ -1,11 +1,14 @@
 #pragma once
 
 #include "Core.h"
-#include "Events/Event.h"
+
 #include "Window.h"
 
-#include "Arc/LayerStack.h"
+#include "Events/Event.h"
 #include "Arc/Events/ApplicationEvent.h"
+
+#include "Arc/LayerStack.h"
+#include "Arc/ImGui/ImGuiLayer.h"
 
 namespace ArcEngine {
 
@@ -28,6 +31,7 @@ namespace ArcEngine {
 		bool OnWindowClose(WindowCloseEvent& e);
 
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 

@@ -5,7 +5,7 @@
 #include "Arc/Events/MouseEvent.h"
 #include "Arc/Events/KeyEvent.h"
 
-#include <Glad/glad.h>
+#include <glad/glad.h>
 
 
 namespace ArcEngine {

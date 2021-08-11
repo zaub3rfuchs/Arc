@@ -8,7 +8,6 @@ workspace "Arc"
 		"Release",
 		"Dist"
 	}
-
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 
@@ -16,20 +15,22 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["GLFW"] = "Arc/vendor/GLFW/include"
 IncludeDir["Glad"] = "Arc/vendor/Glad/include"
-IncludeDir["imGui"] = "Arc/vendor/imgui"
+IncludeDir["ImGui"] = "Arc/vendor/imgui"
+IncludeDir["glm"] = "Arc/vendor/glm"
 
-group "Dependencies"
-	include "Arc/vendor/GLFW"
-	include "Arc/vendor/Glad"
-	include "Arc/vendor/imgui"
+--group "Dependencies"
+include "Arc/vendor/GLFW"
+include "Arc/vendor/Glad"
+include "Arc/vendor/imgui"
 
-group ""
+--group ""
 
 project "Arc"
 	location "Arc"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
-	staticruntime "Off"
+	cppdialect "C++17"
+	staticruntime "on"
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
@@ -40,7 +41,14 @@ project "Arc"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/glm/glm/**.hpp",
+		"%{prj.name}/vendor/glm/glm/**.inl"
+	}
+
+	defines
+	{
+		"_CRT_SECURE_NO_WARNINGS"
 	}
 
 	includedirs
@@ -49,7 +57,8 @@ project "Arc"
 		"%{prj.name}/vendor/spdlog/include",
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
-		"%{IncludeDir.ImGui}"
+		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.glm}"
 	}
 
 	links
@@ -61,7 +70,6 @@ project "Arc"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
 		systemversion "latest"
 
 		defines
@@ -71,35 +79,33 @@ project "Arc"
 			"GLFW_INCLUDE_NONE"
 		}
 
-		postbuildcommands
-		{
-			("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
-		}
+		-- postbuildcommands
+		-- {
+		-- 	("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
+		-- }
 
 		
 		filter "configurations:Debug"
 			defines "ARC_DEBUG"
 			runtime "Debug"
-			symbols "On"
+			symbols "on"
 
 		filter "configurations:Release"
 			defines "ARC_RELEASE"
 			runtime "Release"
-			optimize "On"
+			optimize "on"
 
 		filter "configurations:Dist"
 			defines "ARC_DIST"
 			runtime "Release"
-			optimize "On"
-
-		--filter {"system:windows", "configurations:Release"}
-			--buildoptiopns "/MT"
+			optimize "on"
 
 project "Sandbox"
 	location "Sandbox"
 	kind "ConsoleApp"
 	language "C++"
-	staticruntime "Off"
+	cppdialect "C++17"
+	staticruntime "on"
 
 
 	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
@@ -108,13 +114,15 @@ project "Sandbox"
 	files
 	{
 		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
+		"%{prj.name}/src/**.cpp",
 	}
 
 	includedirs
 	{
 		"Arc/vendor/spdlog/include",
-		"Arc/src"
+		"Arc/src",
+		"Arc/vendor",
+		"%{IncludeDir.glm}"
 	}
 
 	links
@@ -123,7 +131,6 @@ project "Sandbox"
 	}
 
 	filter "system:windows"
-		cppdialect "C++17"
 		systemversion "latest"
 
 		defines
@@ -134,14 +141,14 @@ project "Sandbox"
 		filter "configurations:Debug"
 			defines "ARC_DEBUG"
 			runtime "Debug"
-			symbols "On"
+			symbols "on"
 
 		filter "configurations:Release"
 			defines "ARC_RELEASE"
 			runtime "Release"
-			optimize "On"
+			optimize "on"
 
 		filter "configurations:Dist"
 			defines "ARC_DIST"
 			runtime "Release"
-			optimize "On"
+			optimize "on"
