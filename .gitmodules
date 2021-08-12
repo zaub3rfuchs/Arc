@@ -4,3 +4,9 @@
 [submodule "Arc/vendor/glm"]
 	path = Arc/vendor/glm
 	url = https://github.com/g-truc/glm
+[submodule "Arc/vendor/GLFW"]
+	path = Arc/vendor/GLFW
+	url = https://github.com/zaub3rfuchs/glfw
+[submodule "Arc/vendor/imgui"]
+	path = Arc/vendor/imgui
+	url = https://github.com/zaub3rfuchs/imgui
