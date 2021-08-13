@@ -17,5 +17,5 @@
 #include "Arc/ImGui/ImGuiLayer.h"
 
 // --Entry Point
-#include "Arc/EntryPoint.h";
+#include "Arc/EntryPoint.h"
 // -------------

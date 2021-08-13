@@ -48,9 +48,6 @@
     <ClInclude Include="src\Arc\Application.h">
       <Filter>src\Arc</Filter>
     </ClInclude>
-    <ClInclude Include="src\Arc\Core.h">
-      <Filter>src\Arc</Filter>
-    </ClInclude>
     <ClInclude Include="src\Arc\EntryPoint.h">
       <Filter>src\Arc</Filter>
     </ClInclude>
@@ -88,6 +85,9 @@
       <Filter>src\Arc</Filter>
     </ClInclude>
     <ClInclude Include="src\Arc\Window.h">
+      <Filter>src\Arc</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Core.h">
       <Filter>src\Arc</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\WIndows\WindowsInput.h">

@@ -142,7 +142,6 @@
   <ItemGroup>
     <ClInclude Include="src\Arc.h" />
     <ClInclude Include="src\Arc\Application.h" />
-    <ClInclude Include="src\Arc\Core.h" />
     <ClInclude Include="src\Arc\EntryPoint.h" />
     <ClInclude Include="src\Arc\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Arc\Events\Event.h" />
@@ -156,6 +155,7 @@
     <ClInclude Include="src\Arc\Log.h" />
     <ClInclude Include="src\Arc\MouseCodes.h" />
     <ClInclude Include="src\Arc\Window.h" />
+    <ClInclude Include="src\Arc\Core.h" />
     <ClInclude Include="src\Platform\WIndows\WindowsInput.h" />
     <ClInclude Include="src\Platform\WIndows\WindowsWindow.h" />
     <ClInclude Include="src\apch.h" />
