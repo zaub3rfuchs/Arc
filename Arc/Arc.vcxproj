@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="src\Arc.h" />
     <ClInclude Include="src\Arc\Application.h" />
+    <ClInclude Include="src\Arc\Core.h" />
     <ClInclude Include="src\Arc\EntryPoint.h" />
     <ClInclude Include="src\Arc\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Arc\Events\Event.h" />
@@ -154,8 +155,9 @@
     <ClInclude Include="src\Arc\LayerStack.h" />
     <ClInclude Include="src\Arc\Log.h" />
     <ClInclude Include="src\Arc\MouseCodes.h" />
+    <ClInclude Include="src\Arc\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Arc\Window.h" />
-    <ClInclude Include="src\Arc\Core.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\WIndows\WindowsInput.h" />
     <ClInclude Include="src\Platform\WIndows\WindowsWindow.h" />
     <ClInclude Include="src\apch.h" />
@@ -582,6 +584,7 @@
     <ClCompile Include="src\Arc\Layer.cpp" />
     <ClCompile Include="src\Arc\LayerStack.cpp" />
     <ClCompile Include="src\Arc\Log.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\WIndows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\WIndows\WindowsWindow.cpp" />
     <ClCompile Include="src\apch.cpp">
