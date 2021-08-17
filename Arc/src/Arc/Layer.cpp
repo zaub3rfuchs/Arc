@@ -8,9 +8,4 @@ namespace ArcEngine {
 	{
 	}
 
-	Layer::~Layer()
-	{
-
-	}
-
 }

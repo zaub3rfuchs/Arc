@@ -18,12 +18,12 @@ IncludeDir["Glad"] = "Arc/vendor/Glad/include"
 IncludeDir["ImGui"] = "Arc/vendor/imgui"
 IncludeDir["glm"] = "Arc/vendor/glm"
 
---group "Dependencies"
+group "Dependencies"
 include "Arc/vendor/GLFW"
 include "Arc/vendor/Glad"
 include "Arc/vendor/imgui"
 
---group ""
+group ""
 
 project "Arc"
 	location "Arc"

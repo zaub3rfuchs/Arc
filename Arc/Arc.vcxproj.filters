@@ -1356,6 +1356,24 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="src\Arc\Renderer\Buffer.h">
+      <Filter>src\Arc\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Renderer\Renderer.h">
+      <Filter>src\Arc\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Renderer\Shader.h">
+      <Filter>src\Arc\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Renderer\VertexArray.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
+    <ClInclude Include="src\Arc\Renderer\RendererAPI.h" />
+    <ClInclude Include="src\Arc\Renderer\RenderCommand.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
+    <ClInclude Include="src\Arc\Renderer\OrthographicCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Arc\Application.cpp">
@@ -1388,5 +1406,23 @@
     <ClCompile Include="src\apch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\Arc\Renderer\Buffer.cpp">
+      <Filter>src\Arc\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Arc\Renderer\Renderer.cpp">
+      <Filter>src\Arc\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Arc\Renderer\Shader.cpp">
+      <Filter>src\Arc\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Arc\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
+    <ClCompile Include="src\Arc\Renderer\RendererAPI.cpp" />
+    <ClCompile Include="src\Arc\Renderer\RenderCommand.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
+    <ClCompile Include="src\Arc\Renderer\OrthographicCamera.cpp" />
   </ItemGroup>
 </Project>

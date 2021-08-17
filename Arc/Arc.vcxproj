@@ -140,6 +140,15 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Arc\Renderer\OrthographicCamera.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
+    <ClInclude Include="src\Arc\Renderer\RenderCommand.h" />
+    <ClInclude Include="src\Arc\Renderer\RendererAPI.h" />
+    <ClInclude Include="src\Arc\Renderer\Buffer.h" />
+    <ClInclude Include="src\Arc\Renderer\VertexArray.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
+    <ClInclude Include="src\Arc\Renderer\Renderer.h" />
+    <ClInclude Include="src\Arc\Renderer\Shader.h" />
     <ClInclude Include="src\Arc.h" />
     <ClInclude Include="src\Arc\Application.h" />
     <ClInclude Include="src\Arc\Core.h" />
@@ -158,6 +167,7 @@
     <ClInclude Include="src\Arc\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Arc\Window.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h" />
     <ClInclude Include="src\Platform\WIndows\WindowsInput.h" />
     <ClInclude Include="src\Platform\WIndows\WindowsWindow.h" />
     <ClInclude Include="src\apch.h" />
@@ -578,6 +588,15 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Arc\Renderer\OrthographicCamera.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
+    <ClCompile Include="src\Arc\Renderer\RenderCommand.cpp" />
+    <ClCompile Include="src\Arc\Renderer\RendererAPI.cpp" />
+    <ClCompile Include="src\Arc\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Arc\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
+    <ClCompile Include="src\Arc\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Arc\Renderer\Shader.cpp" />
     <ClCompile Include="src\Arc\Application.cpp" />
     <ClCompile Include="src\Arc\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Arc\ImGui\ImGuiLayer.cpp" />
@@ -585,6 +604,7 @@
     <ClCompile Include="src\Arc\LayerStack.cpp" />
     <ClCompile Include="src\Arc\Log.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\Platform\WIndows\WindowsInput.cpp" />
     <ClCompile Include="src\Platform\WIndows\WindowsWindow.cpp" />
     <ClCompile Include="src\apch.cpp">

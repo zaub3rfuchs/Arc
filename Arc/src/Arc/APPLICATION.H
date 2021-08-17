@@ -10,13 +10,19 @@
 #include "Arc/LayerStack.h"
 #include "Arc/ImGui/ImGuiLayer.h"
 
+#include "Arc/Renderer/Shader.h"
+#include "Arc/Renderer/Buffer.h"
+#include "Arc/Renderer/VertexArray.h"
+
+#include "Arc/Renderer/OrthographicCamera.h"
+
 namespace ArcEngine {
 
 	class ARC_API Application
 	{
 	public:
 		Application();
-		virtual ~Application();
+		virtual ~Application() = default;
 
 		void Run();
 
@@ -34,6 +40,14 @@ namespace ArcEngine {
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
+
+		std::shared_ptr<Shader> m_Shader;
+		std::shared_ptr<VertexArray> m_VertexArray;
+
+		std::shared_ptr<Shader> m_BlueShader;
+		std::shared_ptr<VertexArray> m_SquareVA;
+
+		OrthographicCamera m_Camera;
 
 	private:
 		static Application* s_Instance;
