@@ -1,13 +1,13 @@
 #include "apch.h"
 #include "WindowsInput.h"
 
-#include "Arc/Application.h"
+#include "Arc/Core/Application.h"
 #include <GLFW/glfw3.h>
 
 
 namespace ArcEngine {
 
-	Input* Input::s_Instance = new WindowsInput();
+	Scope<Input> Input::s_Instance = CreateScope<WindowsInput>();
 
 	bool WindowsInput::IsKeyPressedImpl(int keycode)
 	{

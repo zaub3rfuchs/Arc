@@ -84,16 +84,9 @@ project "Arc"
 
 		defines
 		{
-			"ARC_PLATFORM_WINDOWS",
 			"ARC_BUILD_DLL",
 			"GLFW_INCLUDE_NONE"
 		}
-
-		-- postbuildcommands
-		-- {
-		-- 	("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .. "/Sandbox/\"")
-		-- }
-
 		
 		filter "configurations:Debug"
 			defines "ARC_DEBUG"
@@ -142,11 +135,6 @@ project "Sandbox"
 
 	filter "system:windows"
 		systemversion "latest"
-
-		defines
-		{
-			"ARC_PLATFORM_WINDOWS"
-		}
 		
 		filter "configurations:Debug"
 			defines "ARC_DEBUG"

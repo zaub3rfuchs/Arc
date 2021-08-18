@@ -57,17 +57,38 @@
     <ClInclude Include="src\Arc.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Arc\Application.h">
-      <Filter>src\Arc</Filter>
+    <ClInclude Include="src\Arc\Core\Application.h">
+      <Filter>src\Arc\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Arc\Core.h">
-      <Filter>src\Arc</Filter>
+    <ClInclude Include="src\Arc\Core\Core.h">
+      <Filter>src\Arc\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Core\EntryPoint.h">
+      <Filter>src\Arc\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Core\Input.h">
+      <Filter>src\Arc\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Core\KeyCodes.h">
+      <Filter>src\Arc\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Core\Layer.h">
+      <Filter>src\Arc\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Core\LayerStack.h">
+      <Filter>src\Arc\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Core\Log.h">
+      <Filter>src\Arc\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Core\MouseCodes.h">
+      <Filter>src\Arc\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Arc\Core\Timestep.h">
       <Filter>src\Arc\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Arc\EntryPoint.h">
-      <Filter>src\Arc</Filter>
+    <ClInclude Include="src\Arc\Core\Window.h">
+      <Filter>src\Arc\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Arc\Events\ApplicationEvent.h">
       <Filter>src\Arc\Events</Filter>
@@ -84,24 +105,6 @@
     <ClInclude Include="src\Arc\ImGui\ImGuiLayer.h">
       <Filter>src\Arc\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="src\Arc\Input.h">
-      <Filter>src\Arc</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Arc\KeyCodes.h">
-      <Filter>src\Arc</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Arc\Layer.h">
-      <Filter>src\Arc</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Arc\LayerStack.h">
-      <Filter>src\Arc</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Arc\Log.h">
-      <Filter>src\Arc</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Arc\MouseCodes.h">
-      <Filter>src\Arc</Filter>
-    </ClInclude>
     <ClInclude Include="src\Arc\Renderer\Buffer.h">
       <Filter>src\Arc\Renderer</Filter>
     </ClInclude>
@@ -109,6 +112,9 @@
       <Filter>src\Arc\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Arc\Renderer\OrthographicCamera.h">
+      <Filter>src\Arc\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Renderer\OrthographicCameraController.h">
       <Filter>src\Arc\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Arc\Renderer\RenderCommand.h">
@@ -128,9 +134,6 @@
     </ClInclude>
     <ClInclude Include="src\Arc\Renderer\VertexArray.h">
       <Filter>src\Arc\Renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Arc\Window.h">
-      <Filter>src\Arc</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
@@ -1409,8 +1412,17 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Arc\Application.cpp">
-      <Filter>src\Arc</Filter>
+    <ClCompile Include="src\Arc\Core\Application.cpp">
+      <Filter>src\Arc\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Arc\Core\Layer.cpp">
+      <Filter>src\Arc\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Arc\Core\LayerStack.cpp">
+      <Filter>src\Arc\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Arc\Core\Log.cpp">
+      <Filter>src\Arc\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Arc\ImGui\ImGuiBuild.cpp">
       <Filter>src\Arc\ImGui</Filter>
@@ -1418,19 +1430,13 @@
     <ClCompile Include="src\Arc\ImGui\ImGuiLayer.cpp">
       <Filter>src\Arc\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="src\Arc\Layer.cpp">
-      <Filter>src\Arc</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Arc\LayerStack.cpp">
-      <Filter>src\Arc</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Arc\Log.cpp">
-      <Filter>src\Arc</Filter>
-    </ClCompile>
     <ClCompile Include="src\Arc\Renderer\Buffer.cpp">
       <Filter>src\Arc\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Arc\Renderer\OrthographicCamera.cpp">
+      <Filter>src\Arc\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Arc\Renderer\OrthographicCameraController.cpp">
       <Filter>src\Arc\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Arc\Renderer\RenderCommand.cpp">

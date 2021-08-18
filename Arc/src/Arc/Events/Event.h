@@ -1,6 +1,6 @@
 #pragma once
 #include "apch.h"
-#include "Arc/Core.h"
+#include "Arc/Core/Core.h"
 
 
 namespace ArcEngine {
@@ -29,7 +29,7 @@ namespace ArcEngine {
 		EventCategoryMouseButton	= BIT(4)
 	};
 
-#define EVENT_CLASS_TYPE(type)  static EventType GetStaticType() { return EventType::##type; }\
+#define EVENT_CLASS_TYPE(type) static EventType GetStaticType() { return EventType::type; }\
 								virtual EventType GetEventType() const override { return GetStaticType(); }\
 								virtual const char* GetName() const override { return #type; }
 

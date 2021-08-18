@@ -1,0 +1,9 @@
+﻿  Sandbox2D.cpp
+  SandboxApp.cpp
+D:\dev\Arc\Arc\src\Arc\Core\Core.h(10,1): warning C4005: 'ARC_PLATFORM_WINDOWS': macro redefinition (compiling source file src\Sandbox2D.cpp)
+D:\dev\Arc\Sandbox\src\Sandbox2D.cpp : message : see previous definition of 'ARC_PLATFORM_WINDOWS'
+D:\dev\Arc\Arc\src\Arc\Core\Core.h(10,1): warning C4005: 'ARC_PLATFORM_WINDOWS': macro redefinition (compiling source file src\SandboxApp.cpp)
+D:\dev\Arc\Sandbox\src\SandboxApp.cpp : message : see previous definition of 'ARC_PLATFORM_WINDOWS'
+D:\dev\Arc\Arc\src\Arc\Core\Timestep.h(17,49): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data (compiling source file src\Sandbox2D.cpp)
+D:\dev\Arc\Arc\src\Arc\Core\Timestep.h(17,49): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data (compiling source file src\SandboxApp.cpp)
+  Sandbox.vcxproj -> D:\dev\Arc\bin\Debug-windows-x86_64\Sandbox\Sandbox.exe
