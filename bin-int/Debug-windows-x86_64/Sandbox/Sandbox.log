@@ -1,5 +1,0 @@
-﻿  Sandbox2D.cpp
-  SandboxApp.cpp
-D:\dev\Arc\Arc\src\Arc\Core\Timestep.h(17,49): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data (compiling source file src\Sandbox2D.cpp)
-D:\dev\Arc\Arc\src\Arc\Core\Timestep.h(17,49): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data (compiling source file src\SandboxApp.cpp)
-  Sandbox.vcxproj -> D:\dev\Arc\bin\Debug-windows-x86_64\Sandbox\Sandbox.exe
