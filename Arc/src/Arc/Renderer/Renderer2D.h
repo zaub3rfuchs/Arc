@@ -1,7 +1,7 @@
 #pragma once
 
-#include "OrthographicCamera.h"
-#include "Texture.h"
+#include "Arc/Renderer/OrthographicCamera.h"
+#include "Arc/Renderer/Texture.h"
 
 
 namespace ArcEngine {

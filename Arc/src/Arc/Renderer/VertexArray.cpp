@@ -1,8 +1,8 @@
 #include "apch.h"
-#include "VertexArray.h"
+#include "Arc/Renderer/VertexArray.h"
 
 #include "Platform/OpenGL/OpenGLVertexArray.h"
-#include "Renderer.h"
+#include "Arc/Renderer/Renderer.h"
 
 namespace ArcEngine {
 

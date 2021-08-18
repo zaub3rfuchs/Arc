@@ -1,8 +1,8 @@
 #pragma once
-#include "RenderCommand.h"
+#include "Arc/Renderer/RenderCommand.h"
 
-#include "OrthographicCamera.h"
-#include "Shader.h"
+#include "Arc/Renderer/OrthographicCamera.h"
+#include "Arc/Renderer/Shader.h"
 
 namespace ArcEngine {
 

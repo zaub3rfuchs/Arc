@@ -1,9 +1,9 @@
 #include "apch.h"
-#include "ImGuiLayer.h"
+#include "Arc/ImGui/ImGuiLayer.h"
 
-#include "imgui.h"
-#include "backends/imgui_impl_glfw.h"
-#include "backends/imgui_impl_opengl3.h"
+#include <imgui.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
 
 #include "Arc/Core/Application.h"
 

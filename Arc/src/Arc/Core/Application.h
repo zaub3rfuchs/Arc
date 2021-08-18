@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core.h"
+#include "Arc/Core/Core.h"
 
-#include "Window.h"
+#include "Arc/Core/Window.h"
 
 #include "Arc/Events/Event.h"
 #include "Arc/Events/ApplicationEvent.h"

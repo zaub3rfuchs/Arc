@@ -1,9 +1,9 @@
 
 #include "apch.h"
-#include "Renderer.h"
+#include "Arc/Renderer/Renderer.h"
 
 #include "Platform/OpenGL/OpenGLShader.h"
-#include "Renderer2D.h"
+#include "Arc/Renderer/Renderer2D.h"
 
 namespace ArcEngine {
 

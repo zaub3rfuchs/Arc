@@ -1,7 +1,7 @@
 #include "apch.h"
-#include "Texture.h"
+#include "Arc/Renderer/Texture.h"
 
-#include "Renderer.h"
+#include "Arc/Renderer/Renderer.h"
 #include "Platform/OpenGL/OpenGLTexture.h"
 
 namespace ArcEngine {

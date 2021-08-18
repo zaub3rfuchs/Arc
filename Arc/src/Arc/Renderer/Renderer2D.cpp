@@ -1,9 +1,9 @@
 #include "apch.h"
-#include "Renderer2D.h"
+#include "Arc/Renderer/Renderer2D.h"
 
-#include "VertexArray.h"
-#include "Shader.h"
-#include "RenderCommand.h"
+#include "Arc/Renderer/VertexArray.h"
+#include "Arc/Renderer/Shader.h"
+#include "Arc/Renderer/RenderCommand.h"
 #include <glm/gtc/matrix_transform.hpp>
 
 namespace ArcEngine {

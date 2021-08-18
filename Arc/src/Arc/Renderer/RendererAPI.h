@@ -2,7 +2,7 @@
 
 #include <glm/glm.hpp>
 
-#include "VertexArray.h"
+#include "Arc/Renderer/VertexArray.h"
 
 namespace ArcEngine {
 

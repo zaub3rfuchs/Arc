@@ -1,7 +1,7 @@
 #pragma once
 // For use by Arc applications
 
-
+#include "Arc/Core/Core.h"
 #include "Arc/Core/Application.h"
 #include "Arc/Core/Layer.h"
 #include "Arc/Core/Log.h"
