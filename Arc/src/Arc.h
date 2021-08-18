@@ -6,7 +6,7 @@
 #include "Arc/Layer.h"
 #include "Arc/Log.h"
 
-
+#include "Arc/Core/Timestep.h"
 
 // input
 #include "Arc/Input.h"
@@ -21,6 +21,7 @@
 
 #include "Arc/Renderer/Buffer.h"
 #include "Arc/Renderer/Shader.h"
+#include "Arc/Renderer/Texture.h"
 #include "Arc/Renderer/VertexArray.h"
 
 #include "Arc/Renderer/OrthographicCamera.h"

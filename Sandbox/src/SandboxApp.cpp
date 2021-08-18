@@ -1,6 +1,9 @@
 #include <Arc.h>
 
 #include "imgui/imgui.h"
+#include "Platform/OpenGL/OpenGLShader.h"
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class ExampleLayer : public ArcEngine::Layer
 {
@@ -8,7 +11,7 @@ public:
 	ExampleLayer()
 		:Layer("Example"), m_Camera(-1.6f, 1.6f, -0.9f, 0.9f), m_CameraPosition(0.0f)
 	{
-		m_VertexArray.reset(ArcEngine::VertexArray::Create());
+		m_VertexArray = (ArcEngine::VertexArray::Create());
 
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
@@ -16,7 +19,7 @@ public:
 			 0.0f,  0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
 		};
 
-		std::shared_ptr<ArcEngine::VertexBuffer> vertexBuffer;
+		ArcEngine::Ref<ArcEngine::VertexBuffer> vertexBuffer;
 		vertexBuffer.reset(ArcEngine::VertexBuffer::Create(vertices, sizeof(vertices)));
 		ArcEngine::BufferLayout layout = {
 			{ ArcEngine::ShaderDataType::Float3, "a_Position" },
@@ -26,28 +29,29 @@ public:
 		m_VertexArray->AddVertexBuffer(vertexBuffer);
 
 		uint32_t indices[3] = { 0, 1, 2 };
-		std::shared_ptr<ArcEngine::IndexBuffer> indexBuffer;
+		ArcEngine::Ref<ArcEngine::IndexBuffer> indexBuffer;
 		indexBuffer.reset(ArcEngine::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
-		m_SquareVA.reset(ArcEngine::VertexArray::Create());
+		m_SquareVA = (ArcEngine::VertexArray::Create());
 
-		float squareVertices[3 * 4] = {
-			-0.75f, -0.75f, 0.0f,
-			 0.75f, -0.75f, 0.0f,
-			 0.75f,  0.75f, 0.0f,
-			-0.75f,  0.75f, 0.0f
+		float squareVertices[5 * 4] = {
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
-		std::shared_ptr<ArcEngine::VertexBuffer> squareVB;
+		ArcEngine::Ref<ArcEngine::VertexBuffer> squareVB;
 		squareVB.reset(ArcEngine::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
 		squareVB->SetLayout({
-			{ ArcEngine::ShaderDataType::Float3, "a_Position" }
+			{ ArcEngine::ShaderDataType::Float3, "a_Position" },
+			{ ArcEngine::ShaderDataType::Float2, "a_TexCoord" }
 			});
 		m_SquareVA->AddVertexBuffer(squareVB);
 
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		std::shared_ptr<ArcEngine::IndexBuffer> squareIB;
+		ArcEngine::Ref<ArcEngine::IndexBuffer> squareIB;
 		squareIB.reset(ArcEngine::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
 		m_SquareVA->SetIndexBuffer(squareIB);
 
@@ -56,11 +60,14 @@ public:
 			
 			layout(location = 0) in vec3 a_Position;
 			out vec3 v_Position;
+
 			uniform mat4 u_ViewProjection;
+			uniform mat4 u_ModelMatrix;
+
 			void main()
 			{
 				v_Position = a_Position;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);	
+				gl_Position = u_ViewProjection * u_ModelMatrix * vec4(a_Position, 1.0);	
 			}
 		)";
 
@@ -75,48 +82,52 @@ public:
 			}
 		)";
 
-		m_Shader.reset(new ArcEngine::Shader(vertexSrc, fragmentSrc));
+		m_Shader = ArcEngine::Shader::Create("VertexColorTriangle", vertexSrc, fragmentSrc);
 
-		std::string blueShaderVertexSrc = R"(
+		std::string flatColorShaderVertexSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) in vec3 a_Position;
 			out vec3 v_Position;
+
 			uniform mat4 u_ViewProjection;
+			uniform mat4 u_ModelMatrix;
+
 			void main()
 			{
 				v_Position = a_Position;
-				gl_Position = u_ViewProjection * vec4(a_Position, 1.0);		
+				gl_Position = u_ViewProjection * u_ModelMatrix * vec4(a_Position, 1.0);		
 			}
 		)";
 
-		std::string blueShaderFragmentSrc = R"(
+		std::string flatColorShaderFragmentSrc = R"(
 			#version 330 core
 			
 			layout(location = 0) out vec4 color;
 			in vec3 v_Position;
+			
+			uniform vec3 u_Color;
 			void main()
 			{
-				color = vec4(0.2, 0.3, 0.8, 1.0);
+				color = vec4(u_Color, 1.0);
 			}
 		)";
 
-		m_BlueShader.reset(new ArcEngine::Shader(blueShaderVertexSrc, blueShaderFragmentSrc));
-	}
+		m_FlatColorShader = ArcEngine::Shader::Create("FlatColor", flatColorShaderVertexSrc, flatColorShaderFragmentSrc);
+	
+		auto textureShader = m_ShaderLibrary.Load("assets/shaders/Texture.glsl");
+		
+		m_Texture = ArcEngine::Texture2D::Create("assets/textures/Checkerboard.png");
+		m_BlendTexture = ArcEngine::Texture2D::Create("assets/textures/Onozuka.png");
+
+		std::dynamic_pointer_cast<ArcEngine::OpenGLShader>(textureShader)->Bind();
+		std::dynamic_pointer_cast<ArcEngine::OpenGLShader>(textureShader)->UploadUniformInt("u_Texture", 0);
+
+}
 
 
 	void OnUpdate() override
 	{
-
-		if (ArcEngine::Input::IsKeyPressed(ARC_KEY_LEFT))
-			m_CameraPosition.x -= m_CameraMoveSpeed;
-		if (ArcEngine::Input::IsKeyPressed(ARC_KEY_RIGHT))
-			m_CameraPosition.x += m_CameraMoveSpeed;
-		if (ArcEngine::Input::IsKeyPressed(ARC_KEY_DOWN))
-			m_CameraPosition.y -= m_CameraMoveSpeed;
-		if (ArcEngine::Input::IsKeyPressed(ARC_KEY_UP))
-			m_CameraPosition.y += m_CameraMoveSpeed;
-
 		ArcEngine::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		ArcEngine::RenderCommand::Clear();
 
@@ -125,14 +136,54 @@ public:
 
 		ArcEngine::Renderer::BeginScene(m_Camera);
 
-		ArcEngine::Renderer::Submit(m_BlueShader, m_SquareVA);
-		ArcEngine::Renderer::Submit(m_Shader, m_VertexArray);
+		glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+		std::dynamic_pointer_cast<ArcEngine::OpenGLShader>(m_FlatColorShader)->Bind();
+		std::dynamic_pointer_cast<ArcEngine::OpenGLShader>(m_FlatColorShader)->UploadUniformFloat3("u_Color", m_SquareColor);
+
+		for (int y = 0; y < 20; y++)
+		{
+			for (int x = 0; x < 20; x++)
+			{
+				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
+				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+				ArcEngine::Renderer::Submit(m_FlatColorShader, m_SquareVA, transform);
+				ArcEngine::Renderer::Submit(m_FlatColorShader, m_SquareVA, transform);
+			}
+		}
+
+		auto textureShader = m_ShaderLibrary.Get("Texture");
+		m_Texture->Bind();
+		ArcEngine::Renderer::Submit(textureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		
+		m_BlendTexture->Bind();
+		ArcEngine::Renderer::Submit(textureShader, m_SquareVA, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		
+		
+		
+		//ArcEngine::Renderer::Submit(m_Shader, m_VertexArray);
 
 		ArcEngine::Renderer::EndScene();
 	}
 
+	void OnFixedUpdate(ArcEngine::Timestep ts) override
+	{
+		deltaTime = ts.GetSeconds();
+		if (ArcEngine::Input::IsKeyPressed(ARC_KEY_LEFT))
+			m_CameraPosition.x -= m_CameraMoveSpeed * deltaTime;
+		if (ArcEngine::Input::IsKeyPressed(ARC_KEY_RIGHT))
+			m_CameraPosition.x += m_CameraMoveSpeed * deltaTime;
+		if (ArcEngine::Input::IsKeyPressed(ARC_KEY_DOWN))
+			m_CameraPosition.y -= m_CameraMoveSpeed * deltaTime;
+		if (ArcEngine::Input::IsKeyPressed(ARC_KEY_UP))
+			m_CameraPosition.y += m_CameraMoveSpeed * deltaTime;
+	}
+
 	virtual void OnImGuiRender() override
 	{
+		ImGui::Begin("Settings");
+		ImGui::ColorEdit3("Square Color", glm::value_ptr(m_SquareColor));
+		ImGui::End();
 	}
 
 
@@ -142,17 +193,25 @@ public:
 	}
 
 private:
-	std::shared_ptr<ArcEngine::Shader> m_Shader;
-	std::shared_ptr<ArcEngine::VertexArray> m_VertexArray;
+	ArcEngine::ShaderLibrary m_ShaderLibrary;
 
-	std::shared_ptr<ArcEngine::Shader> m_BlueShader;
-	std::shared_ptr<ArcEngine::VertexArray> m_SquareVA;
+	ArcEngine::Ref<ArcEngine::Shader> m_Shader;
+	ArcEngine::Ref<ArcEngine::VertexArray> m_VertexArray;
+
+	ArcEngine::Ref<ArcEngine::Shader> m_FlatColorShader;
+	ArcEngine::Ref<ArcEngine::VertexArray> m_SquareVA;
+
+	ArcEngine::Ref<ArcEngine::Texture2D> m_Texture, m_BlendTexture;
 
 	ArcEngine::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPosition;
 	float m_CameraRotation;
 	float m_CameraRotationSpeed;
-	float m_CameraMoveSpeed = 0.1;
+	float m_CameraMoveSpeed = 5.0;
+
+	float deltaTime;
+	glm::vec3 m_SquareColor = { 0.2f, 0.3f, 0.8f };
+	glm::vec3 m_SquarePosition;
 };
 
 class Sandbox : public ArcEngine::Application

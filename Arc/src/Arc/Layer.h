@@ -2,6 +2,7 @@
 
 #include "Arc/Core.h"
 #include "Arc/Events/Event.h"
+#include "Arc/Core/Timestep.h"
 
 namespace ArcEngine {
 
@@ -14,6 +15,7 @@ namespace ArcEngine {
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
 		virtual void OnUpdate() {}
+		virtual void OnFixedUpdate(Timestep ts) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& e) {}
 

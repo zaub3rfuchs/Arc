@@ -7,6 +7,8 @@
 
 #include "Input.h"
 
+#include <GLFW/glfw3.h>
+
 namespace ArcEngine {
 
 	Application* Application::s_Instance = nullptr;
@@ -18,6 +20,8 @@ namespace ArcEngine {
 
 		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(ARC_BIND_EVENT_FN(Application::OnEvent));
+
+		Renderer::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
@@ -52,8 +56,18 @@ namespace ArcEngine {
 	{
 		while (m_Running)
 		{
+			float time = (float)glfwGetTime(); // Platform::GetTime
+			Timestep timestep = time - m_LastFrameTime;
+			m_LastFrameTime = time;
+
+			
+
 			for (Layer* layer : m_LayerStack)
+			{
 				layer->OnUpdate();
+				layer->OnFixedUpdate(timestep);
+			}
+				
 			
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)

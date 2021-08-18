@@ -8,6 +8,12 @@ workspace "Arc"
 		"Release",
 		"Dist"
 	}
+
+	flags
+	{
+		"MultiProcessorCompile"
+	}
+
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 
@@ -17,6 +23,7 @@ IncludeDir["GLFW"] = "Arc/vendor/GLFW/include"
 IncludeDir["Glad"] = "Arc/vendor/Glad/include"
 IncludeDir["ImGui"] = "Arc/vendor/imgui"
 IncludeDir["glm"] = "Arc/vendor/glm"
+IncludeDir["stb_image"] = "Arc/vendor/stb_image"
 
 group "Dependencies"
 include "Arc/vendor/GLFW"
@@ -42,6 +49,8 @@ project "Arc"
 	{
 		"%{prj.name}/src/**.h",
 		"%{prj.name}/src/**.cpp",
+		"%{prj.name}/vendor/stb_image/**.cpp",
+		"%{prj.name}/vendor/stb_image/**.h",
 		"%{prj.name}/vendor/glm/glm/**.hpp",
 		"%{prj.name}/vendor/glm/glm/**.inl"
 	}
@@ -58,7 +67,8 @@ project "Arc"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.stb_image}"
 	}
 
 	links

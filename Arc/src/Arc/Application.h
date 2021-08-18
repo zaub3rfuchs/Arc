@@ -7,18 +7,14 @@
 #include "Events/Event.h"
 #include "Arc/Events/ApplicationEvent.h"
 
+#include "Arc/Core/Timestep.h"
+
 #include "Arc/LayerStack.h"
 #include "Arc/ImGui/ImGuiLayer.h"
 
-#include "Arc/Renderer/Shader.h"
-#include "Arc/Renderer/Buffer.h"
-#include "Arc/Renderer/VertexArray.h"
-
-#include "Arc/Renderer/OrthographicCamera.h"
-
 namespace ArcEngine {
 
-	class ARC_API Application
+	class Application
 	{
 	public:
 		Application();
@@ -35,12 +31,13 @@ namespace ArcEngine {
 		inline Window& GetWindow() { return *m_Window; };
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
-
+	private:
 		std::unique_ptr<Window> m_Window;
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
-
+		Timestep m_TimeStep;
+		float m_LastFrameTime = 0.0f;
 
 	private:
 		static Application* s_Instance;

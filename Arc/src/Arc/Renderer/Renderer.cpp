@@ -2,9 +2,16 @@
 #include "apch.h"
 #include "Renderer.h"
 
+#include "Platform/OpenGL/OpenGLShader.h"
+
 namespace ArcEngine {
 
 	Renderer::SceneData* Renderer::s_SceneData = new Renderer::SceneData;
+
+	void Renderer::Init() 
+	{
+		RenderCommand::Init();
+	}
 
 	void Renderer::BeginScene(OrthographicCamera& camera)
 	{
@@ -15,10 +22,12 @@ namespace ArcEngine {
 	{
 	}
 
-	void Renderer::Submit(const std::shared_ptr<Shader>& shader, const std::shared_ptr<VertexArray>& vertexArray)
+	void Renderer::Submit(const ArcEngine::Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform)
 	{
 		shader->Bind();
-		shader->UploadUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
+		std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_ModelMatrix", transform);
+
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);
 	}
