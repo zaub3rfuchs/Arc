@@ -65,8 +65,8 @@ namespace ArcEngine {
 			{
 				for (Layer* layer : m_LayerStack)
 				{
-					layer->OnUpdate();
-					layer->OnFixedUpdate(timestep);
+					layer->OnUpdate(timestep);
+					//layer->OnFixedUpdate(timestep);
 				}
 			}
 			

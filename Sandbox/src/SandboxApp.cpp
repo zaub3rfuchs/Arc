@@ -14,7 +14,7 @@ public:
 	ExampleLayer()
 		:Layer("Example"), m_CameraController(1280.0f / 720.0f)
 	{
-		m_VertexArray = (ArcEngine::VertexArray::Create());
+		m_VertexArray = ArcEngine::VertexArray::Create();
 
 		float vertices[3 * 7] = {
 			-0.5f, -0.5f, 0.0f, 0.8f, 0.2f, 0.8f, 1.0f,
@@ -65,12 +65,12 @@ public:
 			out vec3 v_Position;
 
 			uniform mat4 u_ViewProjection;
-			uniform mat4 u_ModelMatrix;
+			uniform mat4 u_Transform;
 
 			void main()
 			{
 				v_Position = a_Position;
-				gl_Position = u_ViewProjection * u_ModelMatrix * vec4(a_Position, 1.0);	
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);	
 			}
 		)";
 
@@ -94,12 +94,12 @@ public:
 			out vec3 v_Position;
 
 			uniform mat4 u_ViewProjection;
-			uniform mat4 u_ModelMatrix;
+			uniform mat4 u_Transform;
 
 			void main()
 			{
 				v_Position = a_Position;
-				gl_Position = u_ViewProjection * u_ModelMatrix * vec4(a_Position, 1.0);		
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position, 1.0);		
 			}
 		)";
 
@@ -129,8 +129,10 @@ public:
 }
 
 
-	void OnUpdate() override
+	void OnUpdate(ArcEngine::Timestep ts) override
 	{
+		m_CameraController.OnUpdate(ts);
+
 		ArcEngine::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
 		ArcEngine::RenderCommand::Clear();
 
@@ -164,11 +166,6 @@ public:
 		//ArcEngine::Renderer::Submit(m_Shader, m_VertexArray);
 
 		ArcEngine::Renderer::EndScene();
-	}
-
-	void OnFixedUpdate(ArcEngine::Timestep ts) override
-	{
-		m_CameraController.OnUpdate(ts);
 	}
 
 	virtual void OnImGuiRender() override
@@ -219,6 +216,7 @@ public:
 	Sandbox() 
 		: Application()
 	{
+		//PushLayer(new ExampleLayer());
 		PushLayer(new Sandbox2D());
 	}
 	~Sandbox() 

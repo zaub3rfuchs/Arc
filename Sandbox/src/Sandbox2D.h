@@ -2,7 +2,6 @@
 
 #include "Arc.h"
 
-
 class Sandbox2D : public ArcEngine::Layer
 {
 public:
@@ -12,13 +11,14 @@ public:
 	virtual void OnAttach() override;
 	virtual void OnDetach() override;
 
-	void OnFixedUpdate(ArcEngine::Timestep ts) override;
+	virtual void OnUpdate(ArcEngine::Timestep ts) override;
 	virtual void OnImGuiRender() override;
-	void OnEvent(ArcEngine::Event& e) override;
+	virtual void OnEvent(ArcEngine::Event& e) override;
 private:
 	ArcEngine::OrthographicCameraController m_CameraController;
 
 	// Temp
+	ArcEngine::Ref<ArcEngine::Texture2D> m_CheckerboardTexture;
 	ArcEngine::Ref<ArcEngine::VertexArray> m_SquareVA;
 	ArcEngine::Ref<ArcEngine::Shader> m_FlatColorShader;
 

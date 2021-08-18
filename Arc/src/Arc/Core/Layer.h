@@ -14,8 +14,8 @@ namespace ArcEngine {
 
 		virtual void OnAttach() {}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
-		virtual void OnFixedUpdate(Timestep ts) {}
+		virtual void OnUpdate(Timestep ts) {}
+		//virtual void OnFixedUpdate(Timestep ts) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& e) {}
 
