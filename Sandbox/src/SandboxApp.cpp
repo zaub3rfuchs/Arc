@@ -22,8 +22,7 @@ public:
 			 0.0f,  0.5f, 0.0f, 0.8f, 0.8f, 0.2f, 1.0f
 		};
 
-		ArcEngine::Ref<ArcEngine::VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(ArcEngine::VertexBuffer::Create(vertices, sizeof(vertices)));
+		ArcEngine::Ref<ArcEngine::VertexBuffer> vertexBuffer = ArcEngine::VertexBuffer::Create(vertices, sizeof(vertices));
 		ArcEngine::BufferLayout layout = {
 			{ ArcEngine::ShaderDataType::Float3, "a_Position" },
 			{ ArcEngine::ShaderDataType::Float4, "a_Color" }
@@ -32,8 +31,7 @@ public:
 		m_VertexArray->AddVertexBuffer(vertexBuffer);
 
 		uint32_t indices[3] = { 0, 1, 2 };
-		ArcEngine::Ref<ArcEngine::IndexBuffer> indexBuffer;
-		indexBuffer.reset(ArcEngine::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		ArcEngine::Ref<ArcEngine::IndexBuffer> indexBuffer = ArcEngine::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
 		m_SquareVA = (ArcEngine::VertexArray::Create());
@@ -45,8 +43,7 @@ public:
 			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
 		};
 
-		ArcEngine::Ref<ArcEngine::VertexBuffer> squareVB;
-		squareVB.reset(ArcEngine::VertexBuffer::Create(squareVertices, sizeof(squareVertices)));
+		ArcEngine::Ref<ArcEngine::VertexBuffer> squareVB = ArcEngine::VertexBuffer::Create(squareVertices, sizeof(squareVertices));
 		squareVB->SetLayout({
 			{ ArcEngine::ShaderDataType::Float3, "a_Position" },
 			{ ArcEngine::ShaderDataType::Float2, "a_TexCoord" }
@@ -54,8 +51,7 @@ public:
 		m_SquareVA->AddVertexBuffer(squareVB);
 
 		uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
-		ArcEngine::Ref<ArcEngine::IndexBuffer> squareIB;
-		squareIB.reset(ArcEngine::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t)));
+		ArcEngine::Ref<ArcEngine::IndexBuffer> squareIB = ArcEngine::IndexBuffer::Create(squareIndices, sizeof(squareIndices) / sizeof(uint32_t));
 		m_SquareVA->SetIndexBuffer(squareIB);
 
 		std::string vertexSrc = R"(
