@@ -26,11 +26,13 @@ namespace ArcEngine {
 
 	WindowsWindow::WindowsWindow(const WindowProps& props)
 	{
+		ARC_PROFILE_FUNCTION();
 		Init(props);
 	}
 
 	WindowsWindow::~WindowsWindow()
 	{
+		ARC_PROFILE_FUNCTION();
 		Shutdown();
 	}
 
@@ -160,6 +162,7 @@ namespace ArcEngine {
 
 	void WindowsWindow::Shutdown()
 	{
+		ARC_PROFILE_FUNCTION();
 		glfwDestroyWindow(m_Window);
 		--s_GLFWWindowCount;
 
@@ -171,6 +174,7 @@ namespace ArcEngine {
 
 	void WindowsWindow::OnUpdate()
 	{
+		ARC_PROFILE_FUNCTION();
 		glfwPollEvents();
 		m_Context->SwapBuffers();
 		
@@ -178,6 +182,7 @@ namespace ArcEngine {
 
 	void WindowsWindow::SetVSync(bool enabled)
 	{
+		ARC_PROFILE_FUNCTION();
 		if (enabled)
 			glfwSwapInterval(1);
 		else

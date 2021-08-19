@@ -1,1 +1,2 @@
-﻿  Glad.vcxproj -> D:\dev\Arc\Arc\vendor\GLAD\bin\Debug-windows-x86_64\Glad\Glad.lib
+﻿  glad.c
+  Glad.vcxproj -> D:\dev\Arc\Arc\vendor\GLAD\bin\Debug-windows-x86_64\Glad\Glad.lib

@@ -156,6 +156,7 @@
     <ClInclude Include="src\Arc\Core\MouseCodes.h" />
     <ClInclude Include="src\Arc\Core\Timestep.h" />
     <ClInclude Include="src\Arc\Core\Window.h" />
+    <ClInclude Include="src\Arc\Debug\Instrumentor.h" />
     <ClInclude Include="src\Arc\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Arc\Events\Event.h" />
     <ClInclude Include="src\Arc\Events\KeyEvent.h" />

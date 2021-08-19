@@ -15,6 +15,8 @@ namespace ArcEngine {
 
 	Application::Application()
 	{
+		ARC_PROFILE_FUNCTION();
+
 		ARC_CORE_ASSERT(!s_Instance, "Application already exists!");
 		s_Instance = this;
 
@@ -35,11 +37,13 @@ namespace ArcEngine {
 	void Application::PushLayer(Layer* layer)
 	{
 		m_LayerStack.PushLayer(layer);
+		layer->OnAttach();
 	}
 
 	void Application::PushOverlay(Layer* layer)
 	{
 		m_LayerStack.PushOverlay(layer);
+		layer->OnAttach();
 	}
 
 	void Application::OnEvent(Event& e)

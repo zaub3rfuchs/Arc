@@ -10,6 +10,9 @@
     <Filter Include="src\Arc\Core">
       <UniqueIdentifier>{AA42BBDA-96A5-4A7F-3F2B-83352B6D1602}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Arc\Debug">
+      <UniqueIdentifier>{08F32F32-74B3-AB68-3DEE-F4E5A96DF044}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Arc\Events">
       <UniqueIdentifier>{B6A6B87B-A274-AC81-8B08-1DA8777588E6}</UniqueIdentifier>
     </Filter>
@@ -89,6 +92,9 @@
     </ClInclude>
     <ClInclude Include="src\Arc\Core\Window.h">
       <Filter>src\Arc\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Debug\Instrumentor.h">
+      <Filter>src\Arc\Debug</Filter>
     </ClInclude>
     <ClInclude Include="src\Arc\Events\ApplicationEvent.h">
       <Filter>src\Arc\Events</Filter>
