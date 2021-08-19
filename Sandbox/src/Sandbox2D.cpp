@@ -6,7 +6,7 @@
 
 
 Sandbox2D::Sandbox2D()
-	: Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f)
+	: Layer("Sandbox2D"), m_CameraController(1280.0f / 720.0f), m_SquareColor({ 0.2f, 0.3f, 0.8f, 1.0f })
 {
 }
 
@@ -22,12 +22,11 @@ void Sandbox2D::OnDetach()
 void Sandbox2D::OnUpdate(ArcEngine::Timestep ts)
 {
 	ARC_PROFILE_FUNCTION();
-		// Update
-	{
-		ARC_PROFILE_SCOPE("CameraController::OnUpdate");
-		m_CameraController.OnUpdate(ts);
-	}
+	// Update
+	m_CameraController.OnUpdate(ts);
 
+
+	ArcEngine::Renderer2D::ResetStats();
 	// Preperation
 	{
 		ARC_PROFILE_SCOPE("Renderer Prep");
@@ -36,13 +35,32 @@ void Sandbox2D::OnUpdate(ArcEngine::Timestep ts)
 	}
 	// Render
 	{
+
+		static float rotation = 0.0f;
+		rotation += ts * 50.0f;
 		ARC_PROFILE_SCOPE("Renderer Draw");
 		ArcEngine::Renderer2D::BeginScene(m_CameraController.GetCamera());
 
 		ArcEngine::Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-		ArcEngine::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
-		//ArcEngine::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture);
+		ArcEngine::Renderer2D::DrawRotatedQuad({ 1.0f, 0.0f }, { 0.8f, 0.8f }, -45.0f, { 0.8f, 0.2f, 0.3f, 1.0f });
+		ArcEngine::Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { m_SquareColor });
+		ArcEngine::Renderer2D::DrawQuad({ -5.0f, -5.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, 20.0f);
+		ArcEngine::Renderer2D::DrawQuad({ -0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f }, m_CheckerboardTexture, 10.0f);
+		ArcEngine::Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, 10.0f);
+		ArcEngine::Renderer2D::DrawRotatedQuad({ -2.0f, 0.0f, 0.0f }, { 1.0f, 1.0f }, rotation, m_CheckerboardTexture, 20.0f);
+		ArcEngine::Renderer2D::EndScene();
 
+		ArcEngine::Renderer2D::BeginScene(m_CameraController.GetCamera());
+
+		
+		for (float y = -5; y < 5; y += 0.5f)
+		{
+			for (float x = -5; x < 5; x += 0.5f)
+			{
+				glm::vec4 color = { (x + 5.0f) / 10.0f, 0.4f, (y + 5.0f) / 10.0f, 0.7f };
+				ArcEngine::Renderer2D::DrawQuad({ x, y }, { 0.45f, 0.45f }, color);
+			}
+		}
 		ArcEngine::Renderer2D::EndScene();
 	}
 }
@@ -52,6 +70,12 @@ void Sandbox2D::OnImGuiRender()
 	ARC_PROFILE_FUNCTION();
 
 	ImGui::Begin("Settings");
+	auto stats = ArcEngine::Renderer2D::GetStats();
+	ImGui::Text("Renderer2D Stats:");
+	ImGui::Text("Draw Calls: %d", stats.DrawCalls);
+	ImGui::Text("Quads: %d", stats.QuadCount);
+	ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
+	ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 	ImGui::ColorEdit4("Square Color", glm::value_ptr(m_SquareColor));
 	ImGui::End();
 }
