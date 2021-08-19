@@ -601,9 +601,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Arc\Core\Application.cpp" />
+    <ClCompile Include="src\Arc\Core\Input.cpp" />
     <ClCompile Include="src\Arc\Core\Layer.cpp" />
     <ClCompile Include="src\Arc\Core\LayerStack.cpp" />
     <ClCompile Include="src\Arc\Core\Log.cpp" />
+    <ClCompile Include="src\Arc\Core\Window.cpp" />
     <ClCompile Include="src\Arc\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Arc\ImGui\ImGuiLayer.cpp" />
     <ClCompile Include="src\Arc\Renderer\Buffer.cpp" />

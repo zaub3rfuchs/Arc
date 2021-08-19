@@ -14,3 +14,6 @@ Directories
 **.vcxproj
 **.vcxproj.filters
 **.vcxproj.user 
+
+# Arc files
+*.log
