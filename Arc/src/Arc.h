@@ -22,6 +22,7 @@
 
 #include "Arc/Renderer/Buffer.h"
 #include "Arc/Renderer/Shader.h"
+#include "Arc/Renderer/Framebuffer.h"
 #include "Arc/Renderer/Texture.h"
 #include "Arc/Renderer/VertexArray.h"
 
