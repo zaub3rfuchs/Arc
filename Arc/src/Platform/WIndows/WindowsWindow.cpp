@@ -1,13 +1,15 @@
 #include "apch.h"
 #include "Platform/Windows/WindowsWindow.h"
 
+#include "Arc/Core/Input.h"
+
 #include "Arc/Events/ApplicationEvent.h"
 #include "Arc/Events/MouseEvent.h"
 #include "Arc/Events/KeyEvent.h"
 
-#include "Platform/OpenGL/OpenGLContext.h"
-
 #include "Arc/Renderer/Renderer.h"
+
+#include "Platform/OpenGL/OpenGLContext.h"
 
 
 namespace ArcEngine {
@@ -95,19 +97,19 @@ namespace ArcEngine {
 			{
 				case GLFW_PRESS:
 				{
-					KeyPressedEvent event(key, 0);
+					KeyPressedEvent event(static_cast<KeyCode>(key), 0);
 					data.EventCallback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					KeyReleasedEvent event(key);
+					KeyReleasedEvent event(static_cast<KeyCode>(key));
 					data.EventCallback(event);
 					break;
 				}
 				case GLFW_REPEAT:
 				{
-					KeyPressedEvent event(key, 1);
+					KeyPressedEvent event(static_cast<KeyCode>(key), 1);
 					data.EventCallback(event);
 					break;
 				}
@@ -117,7 +119,7 @@ namespace ArcEngine {
 		glfwSetCharCallback(m_Window, [](GLFWwindow* window, unsigned int keyCode)
 			{
 				WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
-				KeyTypedEvent event(keyCode);
+				KeyTypedEvent event(static_cast<KeyCode>(keyCode));
 				data.EventCallback(event);
 
 			});
@@ -129,13 +131,13 @@ namespace ArcEngine {
 			{
 				case GLFW_PRESS:
 				{
-					MouseButtonPressedEvent event(button);
+					MouseButtonPressedEvent event(static_cast<MouseCode>(button));
 					data.EventCallback(event);
 					break;
 				}
 				case GLFW_RELEASE:
 				{
-					MouseButtonReleasedEvent event(button);
+					MouseButtonReleasedEvent event(static_cast<MouseCode>(button));
 					data.EventCallback(event);
 					break;
 				}

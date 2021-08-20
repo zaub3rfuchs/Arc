@@ -22,6 +22,9 @@
     <Filter Include="src\Arc\Renderer">
       <UniqueIdentifier>{F83A7843-E433-9795-0D66-7C1AF9BD76A1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Arc\Scene">
+      <UniqueIdentifier>{AF553E33-1B16-BA69-E450-03E750D0FE45}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Platform">
       <UniqueIdentifier>{21CA02E5-0D2D-9289-B6B2-CA3FA2F45D0C}</UniqueIdentifier>
     </Filter>
@@ -147,6 +150,15 @@
     <ClInclude Include="src\Arc\Renderer\VertexArray.h">
       <Filter>src\Arc\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Arc\Scene\Components.h">
+      <Filter>src\Arc\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Scene\Entity.h">
+      <Filter>src\Arc\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Scene\Scene.h">
+      <Filter>src\Arc\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
@@ -167,9 +179,6 @@
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h">
       <Filter>src\Platform\OpenGL</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Platform\WIndows\WindowsInput.h">
-      <Filter>src\Platform\WIndows</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\WIndows\WindowsWindow.h">
       <Filter>src\Platform\WIndows</Filter>
@@ -1430,9 +1439,6 @@
     <ClCompile Include="src\Arc\Core\Application.cpp">
       <Filter>src\Arc\Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Arc\Core\Input.cpp">
-      <Filter>src\Arc\Core</Filter>
-    </ClCompile>
     <ClCompile Include="src\Arc\Core\Layer.cpp">
       <Filter>src\Arc\Core</Filter>
     </ClCompile>
@@ -1486,6 +1492,12 @@
     </ClCompile>
     <ClCompile Include="src\Arc\Renderer\VertexArray.cpp">
       <Filter>src\Arc\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Arc\Scene\Entity.cpp">
+      <Filter>src\Arc\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Arc\Scene\Scene.cpp">
+      <Filter>src\Arc\Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>

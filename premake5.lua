@@ -24,6 +24,7 @@ IncludeDir["Glad"] = "Arc/vendor/Glad/include"
 IncludeDir["ImGui"] = "Arc/vendor/imgui"
 IncludeDir["glm"] = "Arc/vendor/glm"
 IncludeDir["stb_image"] = "Arc/vendor/stb_image"
+IncludeDir["entt"] = "Arc/vendor/entt/include"
 
 group "Dependencies"
 include "Arc/vendor/GLFW"
@@ -69,7 +70,8 @@ project "Arc"
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
 		"%{IncludeDir.glm}",
-		"%{IncludeDir.stb_image}"
+		"%{IncludeDir.stb_image}",
+		"%{IncludeDir.entt}"
 	}
 
 	links
@@ -121,7 +123,8 @@ project "Sandbox"
 		"Arc/vendor/spdlog/include",
 		"Arc/src",
 		"Arc/vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
 	}
 
 	links
@@ -168,7 +171,8 @@ project "Arcanist"
 		"Arc/vendor/spdlog/include",
 		"Arc/src",
 		"Arc/vendor",
-		"%{IncludeDir.glm}"
+		"%{IncludeDir.glm}",
+		"%{IncludeDir.entt}"
 	}
 
 	links
