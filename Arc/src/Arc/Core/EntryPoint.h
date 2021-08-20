@@ -16,7 +16,7 @@ int main(int argc, char** argv)
 	app->Run();
 	ARC_PROFILE_END_SESSION();
 
-	ARC_PROFILE_BEGIN_SESSION("Startup", "ArcProfile-Shutdown.json");
+	ARC_PROFILE_BEGIN_SESSION("Shutdown", "ArcProfile-Shutdown.json");
 	delete app;
 	ARC_PROFILE_END_SESSION();
 }

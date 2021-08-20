@@ -146,3 +146,50 @@ project "Sandbox"
 			defines "ARC_DIST"
 			runtime "Release"
 			optimize "on"
+
+project "Arcanist"
+	location "Arcanist"
+	kind "ConsoleApp"
+	language "C++"
+	cppdialect "C++17"
+	staticruntime "on"
+
+	targetdir ("bin/" .. outputdir .. "/%{prj.name}")
+	objdir ("bin-int/" .. outputdir .. "/%{prj.name}")
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"Arc/vendor/spdlog/include",
+		"Arc/src",
+		"Arc/vendor",
+		"%{IncludeDir.glm}"
+	}
+
+	links
+	{
+		"Arc"
+	}
+
+	filter "system:windows"
+		systemversion "latest"
+
+	filter "configurations:Debug"
+		defines "ARC_DEBUG"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		defines "ARC_RELEASE"
+		runtime "Release"
+		optimize "on"
+
+	filter "configurations:Dist"
+		defines "ARC_DIST"
+		runtime "Release"
+		optimize "on"

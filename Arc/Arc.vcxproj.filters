@@ -114,6 +114,9 @@
     <ClInclude Include="src\Arc\Renderer\Buffer.h">
       <Filter>src\Arc\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Arc\Renderer\Framebuffer.h">
+      <Filter>src\Arc\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Arc\Renderer\GraphicsContext.h">
       <Filter>src\Arc\Renderer</Filter>
     </ClInclude>
@@ -148,6 +151,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLFramebuffer.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h">
@@ -1419,11 +1425,12 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Arc\Renderer\Framebuffer.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLFramebuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Arc\Core\Application.cpp">
+      <Filter>src\Arc\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Arc\Core\Input.cpp">
       <Filter>src\Arc\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Arc\Core\Layer.cpp">
@@ -1435,6 +1442,9 @@
     <ClCompile Include="src\Arc\Core\Log.cpp">
       <Filter>src\Arc\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Arc\Core\Window.cpp">
+      <Filter>src\Arc\Core</Filter>
+    </ClCompile>
     <ClCompile Include="src\Arc\ImGui\ImGuiBuild.cpp">
       <Filter>src\Arc\ImGui</Filter>
     </ClCompile>
@@ -1442,6 +1452,9 @@
       <Filter>src\Arc\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Arc\Renderer\Buffer.cpp">
+      <Filter>src\Arc\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Arc\Renderer\Framebuffer.cpp">
       <Filter>src\Arc\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Arc\Renderer\GraphicsContext.cpp">
@@ -1480,6 +1493,9 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
@@ -1504,9 +1520,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Arc\Core\Window.cpp" />
-    <ClCompile Include="src\Arc\Core\Input.cpp" />
-    <ClCompile Include="src\Arc\Renderer\Framebuffer.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp" />
   </ItemGroup>
 </Project>
