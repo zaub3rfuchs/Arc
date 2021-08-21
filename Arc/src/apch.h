@@ -13,6 +13,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "Arc/Core/Core.h"
 #include "Arc/Core/Log.h"
 #include "Arc/Debug/Instrumentor.h"
 

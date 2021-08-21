@@ -3,7 +3,7 @@ Directories
 **/bin/
 /bin/*
 /bin-int/*
-!vendor/bin/premake/
+!vendor/premake/bin/
 
 # Files
 *.user

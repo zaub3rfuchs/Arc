@@ -6,6 +6,10 @@
 #include <fstream>
 
 #include <thread>
+#include <mutex>
+#include <sstream>
+
+#include "Arc/Core/Log.h"
 
 namespace ArcEngine {
 	struct ProfileResult

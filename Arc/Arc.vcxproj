@@ -154,6 +154,7 @@
     <ClInclude Include="src\Arc\Core\LayerStack.h" />
     <ClInclude Include="src\Arc\Core\Log.h" />
     <ClInclude Include="src\Arc\Core\MouseCodes.h" />
+    <ClInclude Include="src\Arc\Core\PlatformDetection.h" />
     <ClInclude Include="src\Arc\Core\Timestep.h" />
     <ClInclude Include="src\Arc\Core\Window.h" />
     <ClInclude Include="src\Arc\Debug\Instrumentor.h" />
