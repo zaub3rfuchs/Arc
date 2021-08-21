@@ -19,6 +19,7 @@
 #include "Arc/Scene/Scene.h"
 #include "Arc/Scene/Entity.h"
 #include "Arc/Scene/Components.h"
+#include "Arc/Scene/ScriptableEntity.h"
 
 #include "Arc/Renderer/Renderer.h"
 #include "Arc/Renderer/Renderer2D.h"

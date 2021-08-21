@@ -178,6 +178,8 @@
     <ClInclude Include="src\Arc\Scene\Components.h" />
     <ClInclude Include="src\Arc\Scene\Entity.h" />
     <ClInclude Include="src\Arc\Scene\Scene.h" />
+    <ClInclude Include="src\Arc\Scene\SceneCamera.h" />
+    <ClInclude Include="src\Arc\Scene\ScriptableEntity.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLFramebuffer.h" />
@@ -626,6 +628,7 @@
     <ClCompile Include="src\Arc\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Arc\Scene\Entity.cpp" />
     <ClCompile Include="src\Arc\Scene\Scene.cpp" />
+    <ClCompile Include="src\Arc\Scene\SceneCamera.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLFramebuffer.cpp" />
