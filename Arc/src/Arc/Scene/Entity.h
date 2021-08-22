@@ -30,7 +30,7 @@ namespace ArcEngine {
 		template<typename T>
 		bool HasComponent()
 		{
-			return m_Scene->m_Registry.has<T>(m_EntityHandle);
+			return m_Scene->m_Registry.any_of<T>(m_EntityHandle);
 		}
 
 		template<typename T>
@@ -39,6 +39,8 @@ namespace ArcEngine {
 			ARC_CORE_ASSERT(HasComponent<T>(), "Entity does not have component!");
 			m_Scene->m_Registry.remove<T>(m_EntityHandle);
 		}
+
+		// TODO: operator funktionen umschreiben zb zu GetID anstatt uint32_t operator
 
 		operator bool() const { return m_EntityHandle != entt::null; }
 
