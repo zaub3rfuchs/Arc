@@ -75,7 +75,6 @@ namespace ArcEngine {
 				for (Layer* layer : m_LayerStack)
 				{
 					layer->OnUpdate(timestep);
-					//layer->OnFixedUpdate(timestep);
 				}
 			}
 			
