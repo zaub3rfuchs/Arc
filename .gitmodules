@@ -16,3 +16,6 @@
 [submodule "Arc/vendor/yaml-cpp"]
 	path = Arc/vendor/yaml-cpp
 	url = https://github.com/zaub3rfuchs/yaml-cpp
+[submodule "Arc/vendor/ImGuizmo"]
+	path = Arc/vendor/ImGuizmo
+	url = https://github.com/zaub3rfuchs/imguizmo
