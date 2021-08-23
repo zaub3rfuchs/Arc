@@ -2,6 +2,7 @@
 
 #include "Arc.h"
 #include "Panels/SceneHierarchyPanel.h"
+#include "Panels/ContentBrowserPanel.h"
 #include "Arc/Renderer/EditorCamera.h"
 
 namespace ArcEngine {
@@ -19,9 +20,11 @@ namespace ArcEngine {
 		virtual void OnEvent(Event& e) override;
 	private:
 		bool OnKeyPressed(KeyPressedEvent& e);
+		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
 
 		void NewScene();
 		void OpenScene();
+		void OpenScene(const std::filesystem::path& path);
 		void SaveSceneAs();
 	private:
 		ArcEngine::OrthographicCameraController m_CameraController;
@@ -45,6 +48,8 @@ namespace ArcEngine {
 		Entity m_CameraEntity;
 		Entity m_SecondCamera;
 
+		Entity m_HoveredEntity;
+
 		bool m_PrimaryCamera = true;
 		EditorCamera m_EditorCamera;
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
@@ -54,8 +59,10 @@ namespace ArcEngine {
 
 		glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 		int m_GizmoType = -1;
+
 		// Panels
 		SceneHierarchyPanel m_SceneHierarchyPanel;
+		ContentBrowserPanel m_ContentBrowserPanel;
 	};
 
 }
