@@ -13,3 +13,6 @@
 	path = Arc/vendor/imgui
 	url = https://github.com/zaub3rfuchs/imgui
 	branch = docking
+[submodule "Arc/vendor/yaml-cpp"]
+	path = Arc/vendor/yaml-cpp
+	url = https://github.com/zaub3rfuchs/yaml-cpp
