@@ -156,6 +156,7 @@
     <ClInclude Include="src\Arc\Core\MouseCodes.h" />
     <ClInclude Include="src\Arc\Core\PlatformDetection.h" />
     <ClInclude Include="src\Arc\Core\Timestep.h" />
+    <ClInclude Include="src\Arc\Core\UUID.h" />
     <ClInclude Include="src\Arc\Core\Window.h" />
     <ClInclude Include="src\Arc\Debug\Instrumentor.h" />
     <ClInclude Include="src\Arc\Events\ApplicationEvent.h" />
@@ -617,6 +618,7 @@
     <ClCompile Include="src\Arc\Core\Layer.cpp" />
     <ClCompile Include="src\Arc\Core\LayerStack.cpp" />
     <ClCompile Include="src\Arc\Core\Log.cpp" />
+    <ClCompile Include="src\Arc\Core\UUID.cpp" />
     <ClCompile Include="src\Arc\Core\Window.cpp" />
     <ClCompile Include="src\Arc\ImGui\ImGuiBuild.cpp" />
     <ClCompile Include="src\Arc\ImGui\ImGuiLayer.cpp" />

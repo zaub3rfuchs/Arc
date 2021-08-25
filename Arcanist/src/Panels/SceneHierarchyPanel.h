@@ -23,6 +23,9 @@ namespace ArcEngine {
 	private:
 		void DrawEntityNode(Entity entity);
 		void DrawComponents(Entity entity);
+
+
+		void DrawAddComponent(Entity entity);
 	private:
 		Ref<Scene> m_Context;
 		Entity m_SelectionContext;

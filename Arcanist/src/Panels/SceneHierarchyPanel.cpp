@@ -3,10 +3,11 @@
 #include <imgui/imgui.h>
 #include <glm/gtc/type_ptr.hpp>
 #include "Arc/Scene/Entity.h"
-
+#include "Arc/Utils/PlatformUtils.h"
 #include <imgui/imgui_internal.h>
 #include "Arc/Scene/Components.h"
-
+#include "../scripts/Scripts.h"
+#include <typeinfo>
 namespace ArcEngine {
 
 	extern const std::filesystem::path g_AssetPath;
@@ -199,21 +200,8 @@ namespace ArcEngine {
 		}
 	}
 
-	void SceneHierarchyPanel::DrawComponents(Entity entity)
+	void SceneHierarchyPanel::DrawAddComponent(Entity entity) 
 	{
-		if (entity.HasComponent<TagComponent>())
-		{
-			auto& tag = entity.GetComponent<TagComponent>().Tag;
-
-			char buffer[256];
-			memset(buffer, 0, sizeof(buffer));
-			strcpy_s(buffer, sizeof(buffer), tag.c_str());
-			if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
-			{
-				tag = std::string(buffer);
-			}
-		}
-
 		ImGui::SameLine();
 		ImGui::PushItemWidth(-1);
 
@@ -221,8 +209,17 @@ namespace ArcEngine {
 			ImGui::OpenPopup("AddComponent");
 
 		if (ImGui::BeginPopup("AddComponent"))
-		{	
+		{
 			// TODO: maybe own template method?
+			if (ImGui::MenuItem("Transform"))
+			{
+				if (!m_SelectionContext.HasComponent<TransformComponent>())
+					m_SelectionContext.AddComponent<TransformComponent>();
+				else
+					ARC_CORE_WARN("This entity already has the Camera Component!");
+				ImGui::CloseCurrentPopup();
+			}
+
 			if (ImGui::MenuItem("Camera"))
 			{
 				if (!m_SelectionContext.HasComponent<CameraComponent>())
@@ -241,10 +238,37 @@ namespace ArcEngine {
 				ImGui::CloseCurrentPopup();
 			}
 
+			if (ImGui::MenuItem("Script"))
+			{
+				if (!m_SelectionContext.HasComponent<NativeScriptComponent>())
+					m_SelectionContext.AddComponent<NativeScriptComponent>();
+				else
+					ARC_CORE_WARN("This entity already has the Native Script Component!");
+				ImGui::CloseCurrentPopup();
+			}
+
 			ImGui::EndPopup();
 		}
 
 		ImGui::PopItemWidth();
+	}
+
+	void SceneHierarchyPanel::DrawComponents(Entity entity)
+	{
+		if (entity.HasComponent<TagComponent>())
+		{
+			auto& tag = entity.GetComponent<TagComponent>().Tag;
+
+			char buffer[256];
+			memset(buffer, 0, sizeof(buffer));
+			strcpy_s(buffer, sizeof(buffer), tag.c_str());
+			if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
+			{
+				tag = std::string(buffer);
+			}
+		}
+
+		SceneHierarchyPanel::DrawAddComponent(entity);
 
 		DrawComponent<TransformComponent>("Transform", entity, [](auto& component)
 			{
@@ -254,6 +278,36 @@ namespace ArcEngine {
 				component.Rotation = glm::radians(rotation);
 				DrawVec3Control("Scale", component.Scale, 1.0f);
 			});
+
+		DrawComponent<NativeScriptComponent>("Script", entity, [](auto& component)
+		{
+			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+			ImVec2 buttonSize = { lineHeight * 20, lineHeight };
+			ImGui::Text("Script:");
+			ImGui::SameLine();
+			if (ImGui::Button(component.ScriptName.c_str()))
+				ImGui::OpenPopup(component.ScriptName.c_str());
+
+			if (ImGui::BeginPopup(component.ScriptName.c_str()))
+			{
+				if (ImGui::MenuItem("New Script"))
+				{
+					//createScript(entity);
+				}
+
+				if (ImGui::MenuItem("Open Script"))
+				{
+					const std::optional<std::string>& filepath = FileDialogs::OpenFile("C++ Script (*.cpp)\0*.cpp\0");
+					if (filepath)
+					{
+						component.ScriptName = FileDialogs::getFileName(*filepath);
+						component.hasScriptAttached = true;
+						
+					}
+				}
+				ImGui::EndPopup();
+			}
+		});
 
 		DrawComponent<CameraComponent>("Camera", entity, [](auto& component)
 			{

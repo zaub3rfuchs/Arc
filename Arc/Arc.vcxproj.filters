@@ -135,6 +135,9 @@
     <ClInclude Include="src\Arc\Renderer\Camera.h">
       <Filter>src\Arc\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Arc\Renderer\EditorCamera.h">
+      <Filter>src\Arc\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Arc\Renderer\Framebuffer.h">
       <Filter>src\Arc\Renderer</Filter>
     </ClInclude>
@@ -1467,7 +1470,7 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Arc\Renderer\EditorCamera.h" />
+    <ClInclude Include="src\Arc\Core\UUID.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Arc\Core\Application.cpp">
@@ -1495,6 +1498,9 @@
       <Filter>src\Arc\Math</Filter>
     </ClCompile>
     <ClCompile Include="src\Arc\Renderer\Buffer.cpp">
+      <Filter>src\Arc\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Arc\Renderer\EditorCamera.cpp">
       <Filter>src\Arc\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Arc\Renderer\Framebuffer.cpp">
@@ -1581,6 +1587,6 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Arc\Renderer\EditorCamera.cpp" />
+    <ClCompile Include="src\Arc\Core\UUID.cpp" />
   </ItemGroup>
 </Project>

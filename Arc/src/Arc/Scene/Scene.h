@@ -2,7 +2,7 @@
 
 #include "Arc/Core/Timestep.h"
 #include "Arc/Renderer/EditorCamera.h"
-
+#include "Arc/Core/UUID.h"
 #include "entt.hpp"
 
 namespace ArcEngine {
@@ -12,15 +12,24 @@ namespace ArcEngine {
 	class Scene
 	{
 	public:
-		Scene();
-		~Scene();
+		Scene() = default;
+		~Scene() = default;
 
 		Entity CreateEntity(const std::string& name = std::string());
 		void DestroyEntity(Entity entity);
 
-		void OnUpdateRuntime(Timestep ts);
 		void OnUpdateEditor(Timestep ts, EditorCamera& camera);
 		void OnViewportResize(uint32_t width, uint32_t height);
+
+		void OnEvent(Event& e);
+
+		void OnRuntimeStart();
+		void OnUpdateRuntime(Timestep ts);
+		void OnRuntimeStop();
+
+		Entity CreateEntityWithID(UUID uuid, const std::string& name, bool runtimeMap);
+		void CopySceneTo(Ref<Scene>& target);
+
 		Entity GetPrimaryCameraEntity();
 	private:
 		template<typename T>

@@ -6,7 +6,8 @@
 #include "Arc/Scene/SceneSerializer.h"
 #include "Arc/Utils/PlatformUtils.h"
 #include "ImGuizmo.h"
-
+#include "Scripts/Scripts.h"
+#include <iostream>
 #include "Arc/Math/Math.h"
 
 namespace ArcEngine {
@@ -14,14 +15,25 @@ namespace ArcEngine {
 	extern const std::filesystem::path g_AssetPath;
 
 	EditorLayer::EditorLayer()
-		: Layer("EditorLayer"), m_CameraController(1280.0f / 720.0f), m_SquareColor({ 0.2f, 0.3f, 0.8f, 1.0f })
+		: Layer("EditorLayer")
 	{
 	}
 
 	void EditorLayer::OnAttach()
 	{
+	/*	Ref<Scene> c = CreateRef<Scene>(5);
+		Ref<Scene> a = CreateRef<Scene>(2);
+		std::cout << *a << std::endl;
+		Ref<Scene> b = a;
+		*b = *c;
+		std::cout << *a << std::endl;*/
+		
+		
+		std::cout << 1 << std::endl;
 
-		m_CheckerboardTexture = Texture2D::Create("assets/textures/Checkerboard.png");
+		int zahlen[100];
+		int* a = zahlen;
+		std::cout << zahlen << std::endl;
 
 		FramebufferSpecification fbSpec;
 		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
@@ -32,53 +44,11 @@ namespace ArcEngine {
 		m_ActiveScene = CreateRef<Scene>();
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
-		// Entity
-		auto square = m_ActiveScene->CreateEntity("Green Square");
-		square.AddComponent<SpriteRendererComponent>(glm::vec4{ 0.0f, 1.0f, 0.0f, 1.0f });
-
-		auto redSquare = m_ActiveScene->CreateEntity("Red Square");
-		redSquare.AddComponent<SpriteRendererComponent>(glm::vec4{ 1.0f, 0.0f, 0.0f, 1.0f });
-
-		m_SquareEntity = square;
-
-		m_CameraEntity = m_ActiveScene->CreateEntity("Camera A");
-		m_CameraEntity.AddComponent<CameraComponent>();
-
-		m_SecondCamera = m_ActiveScene->CreateEntity("Camera B");
-		auto& cc = m_SecondCamera.AddComponent<CameraComponent>();
-		cc.Primary = false;
-
-		class CameraController : public ScriptableEntity
-		{
-		public:
-			virtual void OnCreate() override
-			{
-				auto& translation = GetComponent<TransformComponent>().Translation;
-				translation.x = rand() % 10 - 5.0f;
-			}
-
-			virtual void OnDestroy() override
-			{
-			}
-
-			virtual void OnUpdate(Timestep ts) override
-			{
-				auto& translation = GetComponent<TransformComponent>().Translation;
-				float speed = 5.0f;
-
-				if (Input::IsKeyPressed(Key::A))
-					translation.x -= speed * ts;
-				if (Input::IsKeyPressed(Key::D))
-					translation.x += speed * ts;
-				if (Input::IsKeyPressed(Key::W))
-					translation.y += speed * ts;
-				if (Input::IsKeyPressed(Key::S))
-					translation.y -= speed * ts;
-			}
-		};
-
-		m_CameraEntity.AddComponent<NativeScriptComponent>().Bind<CameraController>();
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+
+		m_FileMenu.setViewportSize(m_ViewportSize);
+		m_FileMenu.setSceneHierarchyPanel(m_SceneHierarchyPanel);
+		m_FileMenu.setActiveScene(m_ActiveScene);
 	}
 
 	void EditorLayer::OnDetach()
@@ -93,16 +63,12 @@ namespace ArcEngine {
 			(spec.Width != m_ViewportSize.x || spec.Height != m_ViewportSize.y))
 		{
 			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-			m_CameraController.OnResize(m_ViewportSize.x, m_ViewportSize.y);
 
 			m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
 			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
 
-		// Update
-		if (m_ViewportFocused)
-			m_CameraController.OnUpdate(ts);
-
+		//Update
 		m_EditorCamera.OnUpdate(ts);
 
 		// Render
@@ -117,6 +83,8 @@ namespace ArcEngine {
 		// Update scene
 		m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
 
+
+		// check if mousecursor hoveres above an entity in the viewport
 		auto [mx, my] = ImGui::GetMousePos();
 		mx -= m_ViewportBounds[0].x;
 		my -= m_ViewportBounds[0].y;
@@ -134,8 +102,9 @@ namespace ArcEngine {
  		m_Framebuffer->Unbind();
 	}
 
-	void EditorLayer::OnImGuiRender()
+	void EditorLayer::ImGuiInit() 
 	{
+		
 
 		// Note: Switch this to true to enable dockspace
 		static bool dockspaceOpen = true;
@@ -168,7 +137,7 @@ namespace ArcEngine {
 		// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise 
 		// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-		ImGui::Begin("DockSpace Demo", &dockspaceOpen, window_flags);
+		ImGui::Begin("DockSpace", &dockspaceOpen, window_flags);
 		ImGui::PopStyleVar();
 
 		if (opt_fullscreen)
@@ -186,53 +155,40 @@ namespace ArcEngine {
 		}
 
 		style.WindowMinSize.x = minWinSizeX;
+	}
 
-		if (ImGui::BeginMenuBar())
-		{
-			if (ImGui::BeginMenu("File"))
-			{
-				// Disabling fullscreen would allow the window to be moved to the front of other windows, 
-				// which we can't undo at the moment without finer window depth/z control.
-					//ImGui::MenuItem("Fullscreen", NULL, &opt_fullscreen_persistant);
+	void EditorLayer::OnImGuiRender()
+	{
+		EditorLayer::ImGuiInit();
 
-				if (ImGui::MenuItem("New", "Ctrl+N"))
-					NewScene();
+		//if (ImGui::BeginMenuBar())
+		//{
+		//	if (ImGui::BeginMenu("File"))
+		//	{
+		//		if (ImGui::MenuItem("New", "Ctrl+N"))
+		//			NewScene();
 
-				if (ImGui::MenuItem("Open...", "Ctrl+O"))
-					OpenScene();
+		//		if (ImGui::MenuItem("Open...", "Ctrl+O"))
+		//			OpenScene();
 
-				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
-					SaveSceneAs();
+		//		if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+		//			SaveSceneAs();
 
-				if (ImGui::MenuItem("Exit")) Application::Get().Close();
-				ImGui::EndMenu();
-			}
+		//		if (ImGui::MenuItem("Exit")) Application::Get().Close();
+		//		ImGui::EndMenu();
+		//	}
 
-			ImGui::EndMenuBar();
-		}
+		//	ImGui::EndMenuBar();
+		//}
+
+	
 
 		
 		//Render Panels
 		m_SceneHierarchyPanel.OnImGuiRender();
 		m_ContentBrowserPanel.OnImGuiRender();
-
-
-		ImGui::Begin("Stats");
-
-		std::string name = "None";
-		if (m_HoveredEntity)
-			name = m_HoveredEntity.GetComponent<TagComponent>().Tag;
-		ImGui::Text("Hovered Entity: %s", name.c_str());
-
-
-		auto stats = Renderer2D::GetStats();
-		ImGui::Text("Renderer2D Stats:");
-		ImGui::Text("Draw Calls: %d", stats.DrawCalls);
-		ImGui::Text("Quads: %d", stats.QuadCount);
-		ImGui::Text("Vertices: %d", stats.GetTotalVertexCount());
-		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
-
-		ImGui::End();
+		m_StatusPanel.OnImGuiRender();
+		m_FileMenu.OnImGuiRender();
 
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
@@ -274,13 +230,6 @@ namespace ArcEngine {
 			float windowHeight = (float)ImGui::GetWindowHeight();
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
-			// Camera
-			// Runtime camera from entity
-			// auto cameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
-			// const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
-			// const glm::mat4& cameraProjection = camera.GetProjection();
-			// glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
-
 			// Editor camera
 			const glm::mat4& cameraProjection = m_EditorCamera.GetProjection();
 			glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
@@ -313,9 +262,6 @@ namespace ArcEngine {
 				tc.Scale = scale;
 			}
 		}
-
-		
-		
 		ImGui::End();
 		ImGui::PopStyleVar();
 
@@ -324,7 +270,6 @@ namespace ArcEngine {
 
 	void EditorLayer::OnEvent(Event& e)
 	{
-		m_CameraController.OnEvent(e);
 		m_EditorCamera.OnEvent(e);
 
 		EventDispatcher dispatcher(e);

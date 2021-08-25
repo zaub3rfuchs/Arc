@@ -25,7 +25,7 @@ namespace ArcEngine {
 		ARC_CORE_INFO("  Renderer: {0}", glGetString(GL_RENDERER));
 		ARC_CORE_INFO("  Version: {0}", glGetString(GL_VERSION));
 		
-		ARC_CORE_ASSERT(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 5), "Hazel requires at least OpenGL version 4.5!");
+		ARC_CORE_ASSERT(GLVersion.major > 4 || (GLVersion.major == 4 && GLVersion.minor >= 5), "Arc Engine requires at least OpenGL version 4.5!");
 	}
 
 	void OpenGLContext::SwapBuffers()

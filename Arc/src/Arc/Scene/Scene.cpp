@@ -8,14 +8,6 @@
 
 namespace ArcEngine {
 
-	Scene::Scene()
-	{
-	}
-
-	Scene::~Scene()
-	{
-	}
-
 	Entity Scene::CreateEntity(const std::string& name)
 	{
 		Entity entity = { m_Registry.create(), this };
@@ -37,15 +29,19 @@ namespace ArcEngine {
 		{
 			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
 				{
-					if (!nsc.Instance)
+					if (nsc.hasScriptAttached) 
 					{
-						nsc.Instance = nsc.InstantiateScript();
-						nsc.Instance->m_Entity = Entity{ entity, this };
+						if (!nsc.Instance)
+						{
+							nsc.Instance = nsc.InstantiateScript();
+							nsc.Instance->m_Entity = Entity{ entity, this };
 
-						nsc.Instance->OnCreate();
+							nsc.Instance->OnCreate();
+						}
+
+						nsc.Instance->OnUpdate(ts);
 					}
-
-					nsc.Instance->OnUpdate(ts);
+					
 				});
 		}
 
@@ -157,6 +153,80 @@ namespace ArcEngine {
 	template<>
 	void Scene::OnComponentAdded<NativeScriptComponent>(Entity entity, NativeScriptComponent& component)
 	{
+		component.ScriptName = "No Script attached";
+		component.hasScriptAttached = false;
 	}
+
+	void Scene::OnEvent(Event& e)
+	{
+		//if (Input::IsKeyPressed(Key::Escape) && m_IsPlaying == true)
+		{
+			OnRuntimeStop();
+			ARC_CORE_INFO("Runtime stopped by pressing escape!");
+		}
+	}
+
+	void Scene::OnRuntimeStart()
+	{
+		//Do physics and other runtime stuff (TODO)
+		//m_IsPlaying = true;
+	}
+
+	void Scene::OnRuntimeStop()
+	{
+		//Input::SetCursorMode(MousePointerMode::Normal);
+		//Cleanup physics stuff (TODO)
+		//m_IsPlaying = false;
+	}
+
+	template<typename T>
+	static void CopyComponent(entt::registry& dstRegistry, entt::registry& srcRegistry, const std::unordered_map<UUID, entt::entity>& enttMap)
+	{
+		auto components = srcRegistry.view<T>();
+		for (auto srcEntity : components)
+		{
+			entt::entity destEntity = enttMap.at(srcRegistry.get<IDComponent>(srcEntity).ID);
+
+			auto& srcComponent = srcRegistry.get<T>(srcEntity);
+			auto& destComponent = dstRegistry.emplace_or_replace<T>(destEntity, srcComponent);
+		}
+	}
+
+	//Entity Scene::CreateEntityWithID(UUID uuid, const std::string& name, bool runtimeMap)
+	//{
+	//	auto entity = Entity{ m_Registry.create(), this };
+	//	auto& idComponent = entity.AddComponent<IDComponent>();
+	//	idComponent.ID = uuid;
+
+	//	entity.AddComponent<TransformComponent>(glm::mat4(1.0f));
+	//	if (!name.empty())
+	//		entity.AddComponent<TagComponent>(name);
+
+	//	ARC_CORE_ASSERT(m_EntityIDMap.find(uuid) == m_EntityIDMap.end());
+	//	//m_EntityIDMap[uuid] = entity;
+	//	return entity;
+	//}
+
+
+
+
+	//void Scene::CopySceneTo(Ref<Scene>& target)
+	//{
+	//	std::unordered_map<UUID, entt::entity> enttMap;
+	//	auto idComponents = m_Registry.view<IDComponent>();
+	//	for (auto entity : idComponents)
+	//	{
+	//		auto uuid = m_Registry.get<IDComponent>(entity).ID;
+	//		Entity e = target->CreateEntityWithID(uuid, "", true);
+	//	
+	//	}
+
+	//	CopyComponent<TagComponent>(target->m_Registry, m_Registry, enttMap);
+	//	CopyComponent<TransformComponent>(target->m_Registry, m_Registry, enttMap);
+	//	CopyComponent<CameraComponent>(target->m_Registry, m_Registry, enttMap);
+	//	CopyComponent<SpriteRendererComponent>(target->m_Registry, m_Registry, enttMap);
+	//}
+
+
 
 }

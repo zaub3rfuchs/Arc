@@ -3,7 +3,14 @@
 #include "Arc.h"
 #include "Panels/SceneHierarchyPanel.h"
 #include "Panels/ContentBrowserPanel.h"
+#include "Panels/StatusPanel.h"
+
+#include "Menus/FileMenu.h"
+
 #include "Arc/Renderer/EditorCamera.h"
+
+
+
 
 namespace ArcEngine {
 	class EditorLayer : public Layer
@@ -22,17 +29,13 @@ namespace ArcEngine {
 		bool OnKeyPressed(KeyPressedEvent& e);
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
 
+		void ImGuiInit();
+
 		void NewScene();
 		void OpenScene();
 		void OpenScene(const std::filesystem::path& path);
 		void SaveSceneAs();
 	private:
-		ArcEngine::OrthographicCameraController m_CameraController;
-
-		// Temp
-		Ref<Texture2D> m_CheckerboardTexture;
-		Ref<VertexArray> m_SquareVA;
-		Ref<Shader> m_FlatColorShader;
 
 		struct ProfileResult
 		{
@@ -43,26 +46,25 @@ namespace ArcEngine {
 		std::vector<ProfileResult> m_ProfileResults;
 		ArcEngine::Ref<Framebuffer> m_Framebuffer;
 
-		Ref<Scene> m_ActiveScene;
-		Entity m_SquareEntity;
-		Entity m_CameraEntity;
-		Entity m_SecondCamera;
 
+		Ref<Scene> m_ActiveScene;
 		Entity m_HoveredEntity;
 
-		bool m_PrimaryCamera = true;
 		EditorCamera m_EditorCamera;
 		bool m_ViewportFocused = false, m_ViewportHovered = false;
 
 		glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
 		glm::vec2 m_ViewportBounds[2];
 
-		glm::vec4 m_SquareColor = { 0.2f, 0.3f, 0.8f, 1.0f };
 		int m_GizmoType = -1;
 
 		// Panels
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		ContentBrowserPanel m_ContentBrowserPanel;
+		StatusPanel m_StatusPanel;
+
+		FileMenu m_FileMenu;
+		// Menus
 	};
 
 }

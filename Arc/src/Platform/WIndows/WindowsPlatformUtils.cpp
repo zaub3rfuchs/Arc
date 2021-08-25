@@ -52,4 +52,8 @@ namespace ArcEngine {
 		return std::nullopt;
 	}
 
+	std::string FileDialogs::getFileName(const std::filesystem::path& path)
+	{
+		return path.filename().string();
+	}
 }

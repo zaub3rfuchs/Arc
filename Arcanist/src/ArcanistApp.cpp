@@ -1,7 +1,6 @@
 #include <Arc.h>
 #include <Arc/Core/EntryPoint.h>
 
-#include "Platform/OpenGL/OpenGLShader.h"
 #include "EditorLayer.h"
 
 namespace ArcEngine {
@@ -14,12 +13,10 @@ namespace ArcEngine {
 		Arcanist()
 			: Application("Arcanist")
 		{
-			//PushLayer(new ExampleLayer());
 			PushLayer(new EditorLayer());
 		}
 		~Arcanist()
 		{
-
 		}
 	};
 

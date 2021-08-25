@@ -6,9 +6,14 @@
 #include "Arc/Renderer/Texture.h"
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
-
+#include "Arc/Core/UUID.h"
 
 namespace ArcEngine {
+
+	struct IDComponent
+	{
+		UUID ID = 0;
+	};
 
 	struct TagComponent
 	{
@@ -67,7 +72,8 @@ namespace ArcEngine {
 	struct NativeScriptComponent
 	{
 		ScriptableEntity* Instance = nullptr;
-
+		std::string ScriptName;
+		bool hasScriptAttached;
 		// create function pointer to constructor
 		ScriptableEntity* (*InstantiateScript)();
 		// create fuction pointer to void DestroyScript(NativeScriptComponent* nsc) function
