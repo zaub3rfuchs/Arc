@@ -179,6 +179,12 @@ namespace ArcEngine {
 		//m_IsPlaying = false;
 	}
 
+
+	void Scene::ClearRegistry()
+	{
+		m_Registry.clear();
+	}
+
 	template<typename T>
 	static void CopyComponent(entt::registry& dstRegistry, entt::registry& srcRegistry, const std::unordered_map<UUID, entt::entity>& enttMap)
 	{

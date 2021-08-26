@@ -20,6 +20,8 @@ namespace ArcEngine {
 		void OpenScene();
 		void OpenScene(const std::filesystem::path& path);
 		void SaveSceneAs();
+
+		bool OnKeyPressed(KeyPressedEvent& e);
 	private:
 		Ref<Scene> m_ActiveScene;
 		glm::vec2 m_ViewportSize;

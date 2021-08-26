@@ -34,8 +34,8 @@
 #define BIT(x) (1 << x) // bitfield
 
 //binds the Event "member" function to the EventCallbackFn
-#define ARC_BIND_EVENT_FN(function) std::bind(&function, this, std::placeholders::_1)
-//#define ARC_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
+//#define ARC_BIND_EVENT_FN(function) std::bind(&function, this, std::placeholders::_1)
+#define ARC_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 
 namespace ArcEngine {
 	template<typename T>

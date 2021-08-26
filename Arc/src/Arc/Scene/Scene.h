@@ -27,6 +27,8 @@ namespace ArcEngine {
 		void OnUpdateRuntime(Timestep ts);
 		void OnRuntimeStop();
 
+		void ClearRegistry();
+
 		Entity CreateEntityWithID(UUID uuid, const std::string& name, bool runtimeMap);
 		void CopySceneTo(Ref<Scene>& target);
 

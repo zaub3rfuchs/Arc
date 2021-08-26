@@ -30,11 +30,6 @@ namespace ArcEngine {
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
 
 		void ImGuiInit();
-
-		void NewScene();
-		void OpenScene();
-		void OpenScene(const std::filesystem::path& path);
-		void SaveSceneAs();
 	private:
 
 		struct ProfileResult

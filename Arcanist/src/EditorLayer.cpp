@@ -21,20 +21,6 @@ namespace ArcEngine {
 
 	void EditorLayer::OnAttach()
 	{
-	/*	Ref<Scene> c = CreateRef<Scene>(5);
-		Ref<Scene> a = CreateRef<Scene>(2);
-		std::cout << *a << std::endl;
-		Ref<Scene> b = a;
-		*b = *c;
-		std::cout << *a << std::endl;*/
-		
-		
-		std::cout << 1 << std::endl;
-
-		int zahlen[100];
-		int* a = zahlen;
-		std::cout << zahlen << std::endl;
-
 		FramebufferSpecification fbSpec;
 		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
 		fbSpec.Width = 1280;
@@ -160,29 +146,6 @@ namespace ArcEngine {
 	void EditorLayer::OnImGuiRender()
 	{
 		EditorLayer::ImGuiInit();
-
-		//if (ImGui::BeginMenuBar())
-		//{
-		//	if (ImGui::BeginMenu("File"))
-		//	{
-		//		if (ImGui::MenuItem("New", "Ctrl+N"))
-		//			NewScene();
-
-		//		if (ImGui::MenuItem("Open...", "Ctrl+O"))
-		//			OpenScene();
-
-		//		if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
-		//			SaveSceneAs();
-
-		//		if (ImGui::MenuItem("Exit")) Application::Get().Close();
-		//		ImGui::EndMenu();
-		//	}
-
-		//	ImGui::EndMenuBar();
-		//}
-
-	
-
 		
 		//Render Panels
 		m_SceneHierarchyPanel.OnImGuiRender();
@@ -214,7 +177,7 @@ namespace ArcEngine {
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 			{
 				const wchar_t* path = (const wchar_t*)payload->Data;
-				OpenScene(std::filesystem::path(g_AssetPath) / path);
+				m_FileMenu.OpenScene(std::filesystem::path(g_AssetPath) / path);
 			}
 			ImGui::EndDragDropTarget();
 		}
@@ -275,64 +238,41 @@ namespace ArcEngine {
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<KeyPressedEvent>(ARC_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
 		dispatcher.Dispatch<MouseButtonPressedEvent>(ARC_BIND_EVENT_FN(EditorLayer::OnMouseButtonPressed));
+		dispatcher.Dispatch<KeyPressedEvent>(ARC_BIND_EVENT_FN(m_FileMenu.OnKeyPressed));
 	}
 
 	bool EditorLayer::OnKeyPressed(KeyPressedEvent& e)
 	{
-		// Shortcuts
 		if (e.GetRepeatCount() > 0)
 			return false;
 
-		bool control = Input::IsKeyPressed(Key::LeftControl) || Input::IsKeyPressed(Key::RightControl);
-		bool shift = Input::IsKeyPressed(Key::LeftShift) || Input::IsKeyPressed(Key::RightShift);
 		switch (e.GetKeyCode())
 		{
-		case Key::N:
-		{
-			if (control)
-				NewScene();
-
-			break;
-		}
-		case Key::O:
-		{
-			if (control)
-				OpenScene();
-
-			break;
-		}
-		case Key::S:
-		{
-			if (control && shift)
-				SaveSceneAs();
-
-			break;
-		}
-		// Gizmos
-		case Key::Q:
-		{
-			if (!ImGuizmo::IsUsing())
-				m_GizmoType = -1;
-			break;
-		}
-		case Key::W:
-		{
-			if (!ImGuizmo::IsUsing())
-				m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
-			break;
-		}
-		case Key::E:
-		{
-			if (!ImGuizmo::IsUsing())
-				m_GizmoType = ImGuizmo::OPERATION::ROTATE;
-			break;
-		}
-		case Key::R:
-		{
-			if (!ImGuizmo::IsUsing())
-				m_GizmoType = ImGuizmo::OPERATION::SCALE;
-			break;
-		}
+			// Gizmos
+			case Key::Q:
+			{
+				if (!ImGuizmo::IsUsing())
+					m_GizmoType = -1;
+				break;
+			}
+			case Key::W:
+			{
+				if (!ImGuizmo::IsUsing())
+					m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+				break;
+			}
+			case Key::E:
+			{
+				if (!ImGuizmo::IsUsing())
+					m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+				break;
+			}
+			case Key::R:
+			{
+				if (!ImGuizmo::IsUsing())
+					m_GizmoType = ImGuizmo::OPERATION::SCALE;
+				break;
+			}
 
 		}
 	}
@@ -346,42 +286,4 @@ namespace ArcEngine {
 		}
 		return false;
 	}
-
-
-	void EditorLayer::NewScene()
-	{
-		m_ActiveScene = CreateRef<Scene>();
-		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
-	}
-
-	void EditorLayer::OpenScene()
-	{
-		std::optional<std::string> filepath = FileDialogs::OpenFile("Arc Scene (*.arc)\0*.arc\0");
-		if (filepath)
-		{
-			OpenScene(*filepath);
-		}
-	}
-
-	void EditorLayer::OpenScene(const std::filesystem::path& path)
-	{
-		m_ActiveScene = CreateRef<Scene>();
-		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
-
-		SceneSerializer serializer(m_ActiveScene);
-		serializer.Deserialize(path.string());
-	}
-
-	void EditorLayer::SaveSceneAs()
-	{
-		std::optional<std::string> filepath = FileDialogs::SaveFile("Arc Scene (*.arc)\0*.arc\0");
-		if (filepath)
-		{
-			SceneSerializer serializer(m_ActiveScene);
-			serializer.Serialize(*filepath);
-		}
-	}
-
 }
