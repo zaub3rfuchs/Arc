@@ -4,7 +4,6 @@
 #include "Arc/Core/Input.h"
 #include "Arc/Core/KeyCodes.h"
 #include "Arc/Core/MouseCodes.h"
-
 #include <glfw/glfw3.h>
 
 #define GLM_ENABLE_EXPERIMENTAL
@@ -61,8 +60,10 @@ namespace ArcEngine {
 
 	void EditorCamera::OnUpdate(Timestep ts)
 	{
+		m_isMoving = false;
 		if (Input::IsKeyPressed(Key::LeftAlt) && m_isViewportHovered)
 		{
+			m_isMoving = true;
 			const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
 			glm::vec2 delta = (mouse - m_InitialMousePosition) * 0.003f;
 			m_InitialMousePosition = mouse;
@@ -141,7 +142,7 @@ namespace ArcEngine {
 		return glm::quat(glm::vec3(-m_Pitch, -m_Yaw, 0.0f));
 	}
 
-	void EditorCamera::setViewportHoveredStatus(bool isHovered)
+	void EditorCamera::setViewportHoveredStatus(const bool& isHovered)
 	{
 		m_isViewportHovered = isHovered;
 	}

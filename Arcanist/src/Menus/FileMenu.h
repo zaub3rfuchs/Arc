@@ -14,7 +14,7 @@ namespace ArcEngine {
 
 		void setActiveScene(const Ref<Scene>& scene) { m_ActiveScene = scene; };
 		void setViewportSize(const glm::vec2& viewportSize) { m_ViewportSize = viewportSize; };
-		void setSceneHierarchyPanel(const SceneHierarchyPanel& sceneHierarchyPanel) { m_SceneHierarchyPanel = sceneHierarchyPanel; };
+		void setSceneHierarchyPanel(SceneHierarchyPanel* sceneHierarchyPanel) { m_SceneHierarchyPanel = sceneHierarchyPanel; };
 
 		void NewScene();
 		void OpenScene();
@@ -25,7 +25,7 @@ namespace ArcEngine {
 	private:
 		Ref<Scene> m_ActiveScene;
 		glm::vec2 m_ViewportSize;
-		SceneHierarchyPanel m_SceneHierarchyPanel;
+		SceneHierarchyPanel* m_SceneHierarchyPanel;
 	};
 
 }

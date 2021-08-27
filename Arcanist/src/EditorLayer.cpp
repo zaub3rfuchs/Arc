@@ -31,9 +31,11 @@ namespace ArcEngine {
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+		
+		
 
 		m_FileMenu.setViewportSize(m_ViewportSize);
-		m_FileMenu.setSceneHierarchyPanel(m_SceneHierarchyPanel);
+		m_FileMenu.setSceneHierarchyPanel(&m_SceneHierarchyPanel);
 		m_FileMenu.setActiveScene(m_ActiveScene);
 	}
 
@@ -43,6 +45,8 @@ namespace ArcEngine {
 
 	void EditorLayer::OnUpdate(Timestep ts)
 	{
+		m_ViewportSize = m_EditorViewport.getViewPortSize();
+
 		// Resize
 		if (FramebufferSpecification spec = m_Framebuffer->GetSpecification();
 			m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f && // zero sized framebuffer is invalid
@@ -53,9 +57,11 @@ namespace ArcEngine {
 			m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
 			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
+		
 
 		//Update
 		m_EditorCamera.OnUpdate(ts);
+		
 
 		// Render
 		Renderer2D::ResetStats();
@@ -68,7 +74,7 @@ namespace ArcEngine {
 
 		// Update scene
 		m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
-
+		auto m_ViewportBounds = m_EditorViewport.getViewPortBounds();
 
 		// check if mousecursor hoveres above an entity in the viewport
 		auto [mx, my] = ImGui::GetMousePos();
@@ -79,7 +85,6 @@ namespace ArcEngine {
 		int mouseX = (int)mx;
 		int mouseY = (int)my;
 
-
 		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
 		{
 			int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
@@ -87,12 +92,12 @@ namespace ArcEngine {
 		}
 
  		m_Framebuffer->Unbind();
+		uint64_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
+		m_EditorViewport.setEditorView(textureID);
 	}
 
 	void EditorLayer::ImGuiInit() 
 	{
-		
-
 		// Note: Switch this to true to enable dockspace
 		static bool dockspaceOpen = true;
 		static bool opt_fullscreen_persistant = true;
@@ -147,34 +152,18 @@ namespace ArcEngine {
 	void EditorLayer::OnImGuiRender()
 	{
 		EditorLayer::ImGuiInit();
-		
+
+
 		//Render Panels
 		m_SceneHierarchyPanel.OnImGuiRender();
 		m_ContentBrowserPanel.OnImGuiRender();
 		m_StatusPanel.OnImGuiRender();
 		m_FileMenu.OnImGuiRender();
+		m_EditorViewport.OnImGuiRender();
 
-		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
-		ImGui::Begin("Viewport");
-		auto viewportMinRegion = ImGui::GetWindowContentRegionMin();
-		auto viewportMaxRegion = ImGui::GetWindowContentRegionMax();
-		auto viewportOffset = ImGui::GetWindowPos();
-		m_ViewportBounds[0] = { viewportMinRegion.x + viewportOffset.x, viewportMinRegion.y + viewportOffset.y };
-		m_ViewportBounds[1] = { viewportMaxRegion.x + viewportOffset.x, viewportMaxRegion.y + viewportOffset.y };
-
-		m_ViewportFocused = ImGui::IsWindowFocused();
-		m_ViewportHovered = ImGui::IsWindowHovered();
+		m_ViewportHovered = m_EditorViewport.isViewportHovered();
 
 		m_EditorCamera.setViewportHoveredStatus(m_ViewportHovered);
-
-		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused && !m_ViewportHovered);
-
-		//get viewportPanzelsize
-		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
-
-		uint64_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
-		ImGui::Image(reinterpret_cast<void*>(textureID), ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
 		if (ImGui::BeginDragDropTarget())
 		{
@@ -185,7 +174,6 @@ namespace ArcEngine {
 			}
 			ImGui::EndDragDropTarget();
 		}
-
 		// Gizmos
 		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
 		if (selectedEntity && m_GizmoType != -1)
@@ -228,10 +216,10 @@ namespace ArcEngine {
 				tc.Rotation += deltaRotation;
 				tc.Scale = scale;
 			}
+			ImGuizmo::Enable(!m_EditorCamera.isMoving());
 		}
 		ImGui::End();
 		ImGui::PopStyleVar();
-
 		ImGui::End();
 	}
 
@@ -285,7 +273,7 @@ namespace ArcEngine {
 	{
 		if (e.GetMouseButton() == Mouse::ButtonLeft)
 		{
-			if (m_ViewportHovered && !ImGuizmo::IsOver() && !Input::IsKeyPressed(Key::LeftAlt))
+			if (m_EditorViewport.isViewportHovered() && !ImGuizmo::IsOver() && !Input::IsKeyPressed(Key::LeftAlt))
 				m_SceneHierarchyPanel.SetSelectedEntity(m_HoveredEntity);
 		}
 		return false;

@@ -5,6 +5,8 @@
 #include "Panels/ContentBrowserPanel.h"
 #include "Panels/StatusPanel.h"
 
+#include "Viewports/EditorViewport.h"
+
 #include "Menus/FileMenu.h"
 
 #include "Arc/Renderer/EditorCamera.h"
@@ -29,8 +31,6 @@ namespace ArcEngine {
 		bool OnKeyPressed(KeyPressedEvent& e);
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
 
-		bool isMouseHoverViewport(bool test);
-
 		void ImGuiInit();
 	private:
 
@@ -41,7 +41,7 @@ namespace ArcEngine {
 		};
 
 		std::vector<ProfileResult> m_ProfileResults;
-		ArcEngine::Ref<Framebuffer> m_Framebuffer;
+		Ref<Framebuffer> m_Framebuffer;
 
 
 		Ref<Scene> m_ActiveScene;
@@ -59,6 +59,7 @@ namespace ArcEngine {
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 		ContentBrowserPanel m_ContentBrowserPanel;
 		StatusPanel m_StatusPanel;
+		EditorViewport m_EditorViewport;
 
 		FileMenu m_FileMenu;
 		// Menus
