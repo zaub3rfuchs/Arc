@@ -29,6 +29,8 @@ namespace ArcEngine {
 		bool OnKeyPressed(KeyPressedEvent& e);
 		bool OnMouseButtonPressed(MouseButtonPressedEvent& e);
 
+		bool isMouseHoverViewport(bool test);
+
 		void ImGuiInit();
 	private:
 

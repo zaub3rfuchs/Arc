@@ -79,6 +79,7 @@ namespace ArcEngine {
 		int mouseX = (int)mx;
 		int mouseY = (int)my;
 
+
 		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
 		{
 			int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
@@ -163,6 +164,9 @@ namespace ArcEngine {
 
 		m_ViewportFocused = ImGui::IsWindowFocused();
 		m_ViewportHovered = ImGui::IsWindowHovered();
+
+		m_EditorCamera.setViewportHoveredStatus(m_ViewportHovered);
+
 		Application::Get().GetImGuiLayer()->BlockEvents(!m_ViewportFocused && !m_ViewportHovered);
 
 		//get viewportPanzelsize

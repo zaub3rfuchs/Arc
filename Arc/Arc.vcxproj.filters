@@ -105,6 +105,9 @@
     <ClInclude Include="src\Arc\Core\Timestep.h">
       <Filter>src\Arc\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Arc\Core\UUID.h">
+      <Filter>src\Arc\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Arc\Core\Window.h">
       <Filter>src\Arc\Core</Filter>
     </ClInclude>
@@ -1470,7 +1473,6 @@
     <ClInclude Include="vendor\stb_image\stb_image.h">
       <Filter>vendor\stb_image</Filter>
     </ClInclude>
-    <ClInclude Include="src\Arc\Core\UUID.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Arc\Core\Application.cpp">
@@ -1483,6 +1485,9 @@
       <Filter>src\Arc\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Arc\Core\Log.cpp">
+      <Filter>src\Arc\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Arc\Core\UUID.cpp">
       <Filter>src\Arc\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Arc\Core\Window.cpp">
@@ -1587,6 +1592,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Arc\Core\UUID.cpp" />
   </ItemGroup>
 </Project>

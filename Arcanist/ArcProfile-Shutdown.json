@@ -1,1 +1,0 @@
-{"otherData": {},"traceEvents":[{"cat":"function","dur":14567,"name":"void __cdecl ArcEngine::WindowsWindow::Shutdown(void)","ph":"X","pid":0,"tid":1522011177,"ts":851012423573},{"cat":"function","dur":14629,"name":"__cdecl ArcEngine::WindowsWindow::~WindowsWindow(void)","ph":"X","pid":0,"tid":1522011177,"ts":851012423573}]}

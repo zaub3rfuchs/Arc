@@ -61,7 +61,7 @@ namespace ArcEngine {
 
 	void EditorCamera::OnUpdate(Timestep ts)
 	{
-		if (Input::IsKeyPressed(Key::LeftAlt))
+		if (Input::IsKeyPressed(Key::LeftAlt) && m_isViewportHovered)
 		{
 			const glm::vec2& mouse{ Input::GetMouseX(), Input::GetMouseY() };
 			glm::vec2 delta = (mouse - m_InitialMousePosition) * 0.003f;
@@ -139,6 +139,11 @@ namespace ArcEngine {
 	glm::quat EditorCamera::GetOrientation() const
 	{
 		return glm::quat(glm::vec3(-m_Pitch, -m_Yaw, 0.0f));
+	}
+
+	void EditorCamera::setViewportHoveredStatus(bool isHovered)
+	{
+		m_isViewportHovered = isHovered;
 	}
 
 }

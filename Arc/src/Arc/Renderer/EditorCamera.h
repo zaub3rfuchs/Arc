@@ -32,6 +32,8 @@ namespace ArcEngine {
 		const glm::vec3& GetPosition() const { return m_Position; }
 		glm::quat GetOrientation() const;
 
+		void setViewportHoveredStatus(bool isHovered);
+
 		float GetPitch() const { return m_Pitch; }
 		float GetYaw() const { return m_Yaw; }
 	private:
@@ -62,6 +64,7 @@ namespace ArcEngine {
 		float m_Pitch = 0.0f, m_Yaw = 0.0f;
 
 		float m_ViewportWidth = 1280, m_ViewportHeight = 720;
+		bool m_isViewportHovered;
 	};
 
 }
