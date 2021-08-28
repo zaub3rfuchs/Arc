@@ -7,7 +7,6 @@ namespace ArcEngine {
 
 		void OnImGuiRender();
 	private:
-
 	};
 
 }

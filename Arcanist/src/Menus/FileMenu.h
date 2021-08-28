@@ -23,9 +23,9 @@ namespace ArcEngine {
 
 		bool OnKeyPressed(KeyPressedEvent& e);
 	private:
-		Ref<Scene> m_ActiveScene;
-		glm::vec2 m_ViewportSize;
-		SceneHierarchyPanel* m_SceneHierarchyPanel;
+		Ref<Scene>				m_ActiveScene;
+		glm::vec2				m_ViewportSize;
+		SceneHierarchyPanel*	m_SceneHierarchyPanel;
 	};
 
 }

@@ -27,8 +27,8 @@ namespace ArcEngine {
 
 		void DrawAddComponent(Entity entity);
 	private:
-		Ref<Scene> m_Context;
-		Entity m_SelectionContext;
+		Ref<Scene>	m_Context;
+		Entity		m_SelectionContext;
 	};
 
 }

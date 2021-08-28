@@ -41,27 +41,29 @@ namespace ArcEngine {
 		};
 
 		std::vector<ProfileResult> m_ProfileResults;
-		Ref<Framebuffer> m_Framebuffer;
 
+		Ref<Framebuffer>	m_Framebuffer;
+		Ref<Scene>			m_ActiveScene;
 
-		Ref<Scene> m_ActiveScene;
 		Entity m_HoveredEntity;
 
-		EditorCamera m_EditorCamera;
-		bool m_ViewportFocused = false, m_ViewportHovered = false;
 
-		glm::vec2 m_ViewportSize = { 0.0f, 0.0f };
+		bool	m_ViewportFocused	= false;
+		bool	m_ViewportHovered	= false;
+		int		m_GizmoType			= -1;
+
+		glm::vec2 m_ViewportSize	= { 0.0f, 0.0f };
 		glm::vec2 m_ViewportBounds[2];
 
-		int m_GizmoType = -1;
 
 		// Panels
-		SceneHierarchyPanel m_SceneHierarchyPanel;
-		ContentBrowserPanel m_ContentBrowserPanel;
-		StatusPanel m_StatusPanel;
-		EditorViewport m_EditorViewport;
+		SceneHierarchyPanel	m_SceneHierarchyPanel;
+		ContentBrowserPanel	m_ContentBrowserPanel;
+		StatusPanel			m_StatusPanel;
+		EditorViewport		m_EditorViewport;
 
-		FileMenu m_FileMenu;
+		EditorCamera		m_EditorCamera;
+		FileMenu			m_FileMenu;
 		// Menus
 	};
 
