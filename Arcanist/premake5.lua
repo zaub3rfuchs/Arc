@@ -28,6 +28,12 @@ project "Arcanist"
 		"Arc"
 	}
 
+
+	postbuildcommands 
+	{
+	--	'{COPY} "../Arc/vendor/mono/bin/Debug/mono-2.0-sgen.dll" "%{cfg.targetdir}"'
+	}
+
 	filter "system:windows"
 		systemversion "latest"
 

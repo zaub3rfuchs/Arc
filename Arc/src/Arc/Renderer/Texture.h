@@ -6,6 +6,14 @@
 #include "Arc/Core/Core.h"
 
 namespace ArcEngine {
+	// TODO
+	enum class TextureFormat
+	{
+		RED_INTEGER,
+		RGB,
+		RGBA,
+		RGBA8,
+	};
 
 	class Texture
 	{
@@ -26,7 +34,7 @@ namespace ArcEngine {
 	class Texture2D : public Texture
 	{
 	public:
-		static Ref<Texture2D> Create(uint32_t width, uint32_t height);
+		static Ref<Texture2D> Create(TextureFormat format, uint32_t width, uint32_t height);
 		static Ref<Texture2D> Create(const std::string& path);
 	};
 

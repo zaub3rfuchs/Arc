@@ -30,12 +30,6 @@ namespace ArcEngine {
 		CalculateProjection();
 	}
 
-	void SceneCamera::SetViewportSize(uint32_t width, uint32_t height)
-	{
-		m_AspectRatio = (float)width / (float)height;
-		CalculateProjection();
-	}
-
 	void SceneCamera::CalculateProjection()
 	{
 		if (m_ProjectionType == ProjectionType::Perspective)
@@ -53,6 +47,4 @@ namespace ArcEngine {
 				orthoBottom, orthoTop, m_OrthographicNear, m_OrthographicFar);
 		}
 	}
-
-
 }

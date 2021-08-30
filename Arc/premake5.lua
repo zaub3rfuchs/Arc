@@ -10,6 +10,10 @@ project "Arc"
 	pchheader "apch.h"
 	pchsource "src/apch.cpp"
 
+	LibraryDir = {}
+	LibraryDir["mono"] = "vendor/mono/lib/Debug/mono-2.0-sgen.lib"
+
+	
 	files
 	{
 		"src/**.h",
@@ -42,7 +46,8 @@ project "Arc"
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.yaml_cpp}",
-		"%{IncludeDir.ImGuizmo}"
+		"%{IncludeDir.ImGuizmo}",
+		"%{IncludeDir.mono}"
 	}
 
 	links
@@ -51,7 +56,8 @@ project "Arc"
 		"Glad",
 		"ImGui",
 		"yaml-cpp",
-		"opengl32.lib"
+		"opengl32.lib",
+		"%{LibraryDir.mono}"
 	}
 
 	filter "files:vendor/ImGuizmo/**.cpp"

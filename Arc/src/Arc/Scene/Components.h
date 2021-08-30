@@ -37,7 +37,7 @@ namespace ArcEngine {
 			: Translation(translation) {}
 
 
-		glm::mat4 GetTransform() const
+		glm::mat4& GetTransform() const
 		{
 			glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
 
@@ -62,7 +62,7 @@ namespace ArcEngine {
 	struct CameraComponent
 	{
 	    SceneCamera Camera;
-		bool Primary = true; // TODO: think about moving to Scene
+		bool Primary = true;
 		bool FixedAspectRatio = false;
 
 		CameraComponent() = default;
@@ -86,5 +86,12 @@ namespace ArcEngine {
 			DestroyScript = [](NativeScriptComponent* nsc) { delete nsc->Instance; nsc->Instance = nullptr; };
 		}
 	};
+
+	struct ScriptComponent
+	{
+		// TODO: C# script
+		std::string ModuleName;
+	};
+
 
 }

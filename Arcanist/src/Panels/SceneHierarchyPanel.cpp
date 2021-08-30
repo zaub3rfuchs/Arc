@@ -16,6 +16,7 @@ namespace ArcEngine {
 	{
 		SetContext(context);
 	}
+	
 
 	void SceneHierarchyPanel::SetContext(const Ref<Scene>& context)
 	{
@@ -26,7 +27,7 @@ namespace ArcEngine {
 	void SceneHierarchyPanel::OnImGuiRender()
 	{
 		ImGui::Begin("Scene Hierarchy");
-
+		ImGui::SetWindowFontScale(1.1);
 		m_Context->m_Registry.each([&](auto entityID)
 			{
 				Entity entity{ entityID , m_Context.get() };
@@ -50,11 +51,13 @@ namespace ArcEngine {
 		ImGui::Begin("Properties");
 		if (m_SelectionContext)
 		{
+			ImGui::SetWindowFontScale(1.1);
 			DrawComponents(m_SelectionContext);
 		}
 
 		ImGui::End();
 	}
+
 
 	void SceneHierarchyPanel::DrawEntityNode(Entity entity)
 	{
@@ -100,7 +103,6 @@ namespace ArcEngine {
 		auto boldFont = io.Fonts->Fonts[0];
 
 		ImGui::PushID(label.c_str());
-
 		ImGui::Columns(2);
 		ImGui::SetColumnWidth(0, columnWidth);
 		ImGui::Text(label.c_str());
@@ -108,9 +110,8 @@ namespace ArcEngine {
 
 		ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
 		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2{ 0, 0 });
-
 		float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
-		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight };
+		ImVec2 buttonSize = { lineHeight + 3.0f, lineHeight +3.0f };
 
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4{ 0.8f, 0.1f, 0.15f, 1.0f });
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4{ 0.9f, 0.2f, 0.2f, 1.0f });
@@ -168,18 +169,18 @@ namespace ArcEngine {
 		{
 			auto& component = entity.GetComponent<T>();
 			ImVec2 contentRegionAvailable = ImGui::GetContentRegionAvail();
-
+			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
 			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 4, 4 });
-			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+			float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.5f;
 			ImGui::Separator();
 			bool open = ImGui::TreeNodeEx((void*)typeid(T).hash_code(), treeNodeFlags, name.c_str());
-			ImGui::PopStyleVar();
-			ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
+			ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.55f);
+			ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 2.1f);
 			if (ImGui::Button("+", ImVec2{ lineHeight, lineHeight }))
 			{
 				ImGui::OpenPopup("ComponentSettings");
 			}
-
+			ImGui::PopStyleVar(3);
 			bool removeComponent = false;
 			if (ImGui::BeginPopup("ComponentSettings"))
 			{
@@ -204,10 +205,10 @@ namespace ArcEngine {
 	{
 		ImGui::SameLine();
 		ImGui::PushItemWidth(-1);
-
+		ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
 		if (ImGui::Button("Add Component"))
 			ImGui::OpenPopup("AddComponent");
-
+		ImGui::PopStyleVar();
 		if (ImGui::BeginPopup("AddComponent"))
 		{
 			// TODO: maybe own template method?
@@ -262,10 +263,12 @@ namespace ArcEngine {
 			char buffer[256];
 			memset(buffer, 0, sizeof(buffer));
 			strcpy_s(buffer, sizeof(buffer), tag.c_str());
+			ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
 			if (ImGui::InputText("##Tag", buffer, sizeof(buffer)))
 			{
 				tag = std::string(buffer);
 			}
+			ImGui::PopStyleVar();
 		}
 
 		SceneHierarchyPanel::DrawAddComponent(entity);
@@ -312,7 +315,7 @@ namespace ArcEngine {
 		DrawComponent<CameraComponent>("Camera", entity, [](auto& component)
 			{
 				auto& camera = component.Camera;
-
+				ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
 				ImGui::Checkbox("Primary", &component.Primary);
 
 				const char* projectionTypeStrings[] = { "Perspective", "Orthographic" };
@@ -366,11 +369,19 @@ namespace ArcEngine {
 
 					ImGui::Checkbox("Fixed Aspect Ratio", &component.FixedAspectRatio);
 				}
+				glm::vec4 bgColor = camera.GetBackgroundColor();
+				if (ImGui::ColorEdit4("Background Color", glm::value_ptr(bgColor)))
+					camera.SetBackgroundColor(bgColor);
+
+				ImGui::PopStyleVar();
 			});
 
 		DrawComponent<SpriteRendererComponent>("Sprite Renderer", entity, [](auto& component)
 			{
+				ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 5.0f);
+				
 				ImGui::ColorEdit4("Color", glm::value_ptr(component.Color));
+
 
 
 				ImGui::Button("Texture", ImVec2(100.0f, 0.0f));
@@ -388,6 +399,8 @@ namespace ArcEngine {
 
 
 				ImGui::DragFloat("Tiling Factor", &component.TilingFactor, 0.1f, 0.0f, 100.0f);
+
+				ImGui::PopStyleVar();
 			});
 
 	}

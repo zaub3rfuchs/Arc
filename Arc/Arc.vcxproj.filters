@@ -28,6 +28,9 @@
     <Filter Include="src\Arc\Scene">
       <UniqueIdentifier>{AF553E33-1B16-BA69-E450-03E750D0FE45}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Arc\Script">
+      <UniqueIdentifier>{1619109B-02E7-03A1-EB7A-74C7D7E7DF05}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Arc\Utils">
       <UniqueIdentifier>{F2E96B33-5EAA-E769-27E5-30E793642C46}</UniqueIdentifier>
     </Filter>
@@ -191,6 +194,15 @@
     </ClInclude>
     <ClInclude Include="src\Arc\Scene\ScriptableEntity.h">
       <Filter>src\Arc\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Script\ScriptEngine.h">
+      <Filter>src\Arc\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Script\ScriptEngineRegistry.h">
+      <Filter>src\Arc\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Script\ScriptWrapper.h">
+      <Filter>src\Arc\Script</Filter>
     </ClInclude>
     <ClInclude Include="src\Arc\Utils\PlatformUtils.h">
       <Filter>src\Arc\Utils</Filter>
@@ -1552,6 +1564,15 @@
     </ClCompile>
     <ClCompile Include="src\Arc\Scene\SceneSerializer.cpp">
       <Filter>src\Arc\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Arc\Script\ScriptEngine.cpp">
+      <Filter>src\Arc\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Arc\Script\ScriptEngineRegistry.cpp">
+      <Filter>src\Arc\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Arc\Script\ScriptWrapper.cpp">
+      <Filter>src\Arc\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp">
       <Filter>src\Platform\OpenGL</Filter>

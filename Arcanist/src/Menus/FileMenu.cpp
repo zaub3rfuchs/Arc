@@ -28,12 +28,11 @@ namespace ArcEngine {
 
 			ImGui::EndMenuBar();
 		}
-
 	}
 
 	void FileMenu::NewScene()
 	{
-		m_ActiveScene->ClearRegistry();
+		m_ActiveScene = CreateRef<Scene>();
 		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		m_SceneHierarchyPanel->SetContext(m_ActiveScene);
 	}
@@ -49,21 +48,26 @@ namespace ArcEngine {
 
 	void FileMenu::OpenScene(const std::filesystem::path& path)
 	{
-		m_ActiveScene->ClearRegistry();
-		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-		m_SceneHierarchyPanel->SetContext(m_ActiveScene);
+		std::string filepath = FileDialogs::OpenFile("Arc Scene (*.arc)\0*.arc\0");
+		if (!filepath.empty())
+		{
+			memcpy(&m_ActiveScene, &CreateRef<Scene>(), 2 * sizeof(float));
+			m_ActiveScene = CreateRef<Scene>();
+			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_SceneHierarchyPanel->SetContext(m_ActiveScene);
 
-		SceneSerializer serializer(m_ActiveScene);
-		serializer.Deserialize(path.string());
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Deserialize(filepath);
+		}
 	}
 
 	void FileMenu::SaveSceneAs()
 	{
-		std::optional<std::string> filepath = FileDialogs::SaveFile("Arc Scene (*.arc)\0*.arc\0");
-		if (filepath)
+		std::string filepath = FileDialogs::SaveFile("Arc Scene (*.arc)\0*.arc\0");
+		if (!filepath.empty())
 		{
 			SceneSerializer serializer(m_ActiveScene);
-			serializer.Serialize(*filepath);
+			serializer.Serialize(filepath);
 		}
 	}
 

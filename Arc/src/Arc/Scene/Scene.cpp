@@ -3,6 +3,7 @@
 #include "Entity.h"
 #include "Components.h"
 #include "Arc/Renderer/Renderer2D.h"
+#include "Arc/Renderer/RenderCommand.h"
 
 #include <glm/glm.hpp>
 
@@ -48,6 +49,7 @@ namespace ArcEngine {
 
 		// Render 2D
 		Camera* mainCamera = nullptr;
+		glm::vec4 bgColor;
 		glm::mat4 cameraTransform;
 		{
 			auto view = m_Registry.view<TransformComponent, CameraComponent>();
@@ -58,6 +60,7 @@ namespace ArcEngine {
 				{
 					mainCamera = &camera.Camera;
 					cameraTransform = transform.GetTransform();
+					bgColor = camera.Camera.GetBackgroundColor();
 					break;
 				}
 			}
@@ -65,12 +68,12 @@ namespace ArcEngine {
 		if (mainCamera)
 		{
 			Renderer2D::BeginScene(*mainCamera, cameraTransform);
-
+			RenderCommand::SetClearColor({ bgColor });
+			RenderCommand::Clear();
 			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 			for (auto entity : group)
 			{
 				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-
 				Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
 			}
 
@@ -83,11 +86,13 @@ namespace ArcEngine {
 	{
 		Renderer2D::BeginScene(camera);
 
+		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+		RenderCommand::Clear();
+
 		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 		for (auto entity : group)
 		{
 			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-
 			Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
 		}
 
@@ -182,7 +187,13 @@ namespace ArcEngine {
 
 	void Scene::ClearRegistry()
 	{
-		m_Registry.clear();
+		auto view = m_Registry.view<TagComponent>();
+		for (auto entity : view)
+		{
+			m_Registry.destroy(entity);
+		}
+		std::cout << m_Registry.empty() << std::endl;
+			//m_Registry.empty();
 	}
 
 	template<typename T>

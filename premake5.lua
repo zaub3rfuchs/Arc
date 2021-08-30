@@ -30,6 +30,11 @@ IncludeDir["stb_image"] = "%{wks.location}/Arc/vendor/stb_image"
 IncludeDir["entt"] = "%{wks.location}/Arc/vendor/entt/include"
 IncludeDir["yaml_cpp"] = "%{wks.location}/Arc/vendor/yaml-cpp/include"
 IncludeDir["ImGuizmo"] = "%{wks.location}/Arc/vendor/ImGuizmo"
+IncludeDir["mono"] = "%{wks.location}/Arc/vendor/mono/include"
+
+
+
+
 
 group "Dependencies"
 --include "vendor/premake"
@@ -42,3 +47,4 @@ group ""
 include "Arc"
 include "Arcanist"
 include "Sandbox"
+include "Arc/ScriptCore"

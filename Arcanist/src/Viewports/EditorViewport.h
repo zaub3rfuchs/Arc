@@ -13,19 +13,17 @@ namespace ArcEngine {
 
 		void OnImGuiRender();
 
-		const glm::vec2& getViewPortSize() { return m_ViewportSize; };
-		const auto getViewPortBounds() { return m_ViewportBounds; };
-		const bool& isViewportHovered() { return m_ViewportHovered; };
+		const glm::vec2&	getViewPortSize()		{ return m_ViewportSize; };
+		const auto			getViewPortBounds()		{ return m_ViewportBounds; };
+		const bool&			isViewportHovered()		{ return m_ViewportHovered; };
+		const bool&			isViewportFocused()		{ return m_ViewportFocused; };
 
-		void setEditorCamera(const EditorCamera& editorCamera) { m_EditorCamera = editorCamera; };
-		void setEditorView(const uint64_t& viewTexture) { m_ViewTexture = viewTexture; };
-		void setSceneHierarchyPanel(const SceneHierarchyPanel& sceneHierarchyPanel) { m_SceneHierarchyPanel = sceneHierarchyPanel; };
-		bool OnKeyPressed(KeyPressedEvent& e);
+		void setEditorView(const uint64_t& viewTexture)								{ m_ViewTexture = viewTexture; };
+		void setSceneHierarchyPanel(const SceneHierarchyPanel& sceneHierarchyPanel)	{ m_SceneHierarchyPanel = sceneHierarchyPanel; };
 	private:
 		Ref<Framebuffer>	m_Framebuffer;
 		Ref<Scene>			m_ActiveScene;
 
-		EditorCamera		m_EditorCamera;
 		SceneHierarchyPanel m_SceneHierarchyPanel;
 
 		bool		m_ViewportFocused	= false;

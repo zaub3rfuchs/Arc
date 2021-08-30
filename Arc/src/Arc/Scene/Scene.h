@@ -15,34 +15,34 @@ namespace ArcEngine {
 		Scene() = default;
 		~Scene() = default;
 
-		Entity CreateEntity(const std::string& name = std::string());
-		void DestroyEntity(Entity entity);
+		void	DestroyEntity(Entity entity);
 
-		void OnUpdateEditor(Timestep ts, EditorCamera& camera);
-		void OnViewportResize(uint32_t width, uint32_t height);
+		void	OnUpdateEditor(Timestep ts, EditorCamera& camera);
+		void	OnViewportResize(uint32_t width, uint32_t height);
 
-		void OnEvent(Event& e);
+		void	OnEvent(Event& e);
 
-		void OnRuntimeStart();
-		void OnUpdateRuntime(Timestep ts);
-		void OnRuntimeStop();
+		void	OnRuntimeStart();
+		void	OnUpdateRuntime(Timestep ts);
+		void	OnRuntimeStop();
 
-		void ClearRegistry();
+		void	ClearRegistry();
 
-		Entity CreateEntityWithID(UUID uuid, const std::string& name, bool runtimeMap);
-		void CopySceneTo(Ref<Scene>& target);
+		void	CopySceneTo(Ref<Scene>& target);
 
-		Entity GetPrimaryCameraEntity();
+		Entity	CreateEntityWithID(UUID uuid, const std::string& name, bool runtimeMap);
+		Entity	CreateEntity(const std::string& name = std::string());
+		Entity	GetPrimaryCameraEntity();
 	private:
 		template<typename T>
 		void OnComponentAdded(Entity entity, T& component);
 	private:
-		entt::registry m_Registry;
-		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
+		entt::registry	m_Registry;
+		uint32_t		m_ViewportWidth = 0, m_ViewportHeight = 0;
 
-		friend class Entity;
-		friend class SceneSerializer;
-		friend class SceneHierarchyPanel;
+		friend class	Entity;
+		friend class	SceneSerializer;
+		friend class	SceneHierarchyPanel;
 	};
 
 }

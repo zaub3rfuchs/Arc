@@ -28,6 +28,7 @@ namespace ArcEngine
 		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
 		ImGui::Image(reinterpret_cast<void*>(m_ViewTexture), ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+		ImGui::PopStyleVar();
 	}
 }
 

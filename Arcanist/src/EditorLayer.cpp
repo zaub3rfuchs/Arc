@@ -21,6 +21,7 @@ namespace ArcEngine {
 
 	void EditorLayer::OnAttach()
 	{
+
 		FramebufferSpecification fbSpec;
 		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
 		fbSpec.Width = 1280;
@@ -36,7 +37,7 @@ namespace ArcEngine {
 
 		m_FileMenu.setViewportSize(m_ViewportSize);
 		m_FileMenu.setSceneHierarchyPanel(&m_SceneHierarchyPanel);
-		m_FileMenu.setActiveScene(m_ActiveScene);
+		//m_FileMenu.setActiveScene(m_ActiveScene);
 	}
 
 	void EditorLayer::OnDetach()
@@ -57,23 +58,39 @@ namespace ArcEngine {
 			m_EditorCamera.SetViewportSize(m_ViewportSize.x, m_ViewportSize.y);
 			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
+
 		
 
-		//Update
+		//Update Camera
 		m_EditorCamera.OnUpdate(ts);
 		
 
 		// Render
 		Renderer2D::ResetStats();
 		m_Framebuffer->Bind();
-		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-		RenderCommand::Clear();
+		
 
 		// Clear our entity ID attachment to -1
 		m_Framebuffer->ClearAttachment(1, -1);
 
-		// Update scene
-		m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+		// set Viewport
+		if (m_eViewportFocused && m_RuntimeViewport.isViewportFocused())
+			m_eViewportFocused = false;
+		if (m_eViewportFocused == false && m_EditorViewport.isViewportFocused())
+			m_eViewportFocused = true;
+
+		// Update EditorScene or RuntimeScene
+		if (!m_eViewportFocused)
+		{
+			m_PrimaryCameraEntity = m_ActiveScene->GetPrimaryCameraEntity();
+			if ((uint32_t)m_PrimaryCameraEntity != -1)
+				m_ActiveScene->OnUpdateRuntime(ts);
+		}
+		else
+		{
+			m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+		}
+
 		auto m_ViewportBounds = m_EditorViewport.getViewPortBounds();
 
 		// check if mousecursor hoveres above an entity in the viewport
@@ -94,6 +111,7 @@ namespace ArcEngine {
  		m_Framebuffer->Unbind();
 		uint64_t textureID = m_Framebuffer->GetColorAttachmentRendererID();
 		m_EditorViewport.setEditorView(textureID);
+		m_RuntimeViewport.setRuntimeView(textureID);
 	}
 
 	void EditorLayer::ImGuiInit() 
@@ -153,24 +171,50 @@ namespace ArcEngine {
 	{
 		EditorLayer::ImGuiInit();
 
-
 		//Render Panels
 		m_SceneHierarchyPanel.OnImGuiRender();
 		m_ContentBrowserPanel.OnImGuiRender();
 		m_StatusPanel.OnImGuiRender();
-		m_FileMenu.OnImGuiRender();
+
+
+
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("File"))
+			{
+				if (ImGui::MenuItem("New", "Ctrl+N"))
+					NewScene();
+
+				if (ImGui::MenuItem("Open...", "Ctrl+O"))
+					OpenScene();
+
+				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
+					SaveSceneAs();
+
+				if (ImGui::MenuItem("Exit")) Application::Get().Close();
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMenuBar();
+		}
+		//m_FileMenu.OnImGuiRender();
+
+
+		m_RuntimeViewport.OnImGuiRender();
 		m_EditorViewport.OnImGuiRender();
 
 		m_ViewportHovered = m_EditorViewport.isViewportHovered();
 
 		m_EditorCamera.setViewportHoveredStatus(m_ViewportHovered);
 
+
+
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("CONTENT_BROWSER_ITEM"))
 			{
 				const wchar_t* path = (const wchar_t*)payload->Data;
-				m_FileMenu.OpenScene(std::filesystem::path(g_AssetPath) / path);
+				OpenScene(std::filesystem::path(g_AssetPath) / path);
 			}
 			ImGui::EndDragDropTarget();
 		}
@@ -219,7 +263,6 @@ namespace ArcEngine {
 			ImGuizmo::Enable(!m_EditorCamera.isMoving());
 		}
 		ImGui::End();
-		ImGui::PopStyleVar();
 		ImGui::End();
 	}
 
@@ -278,4 +321,39 @@ namespace ArcEngine {
 		}
 		return false;
 	}
+
+	void EditorLayer::NewScene()
+	{
+		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+	}
+
+	void EditorLayer::OpenScene()
+	{
+		std::string filepath = FileDialogs::OpenFile("Arc Scene (*.arc)\0*.arc\0");
+		if (!filepath.empty())
+			OpenScene(filepath);
+	}
+
+	void EditorLayer::OpenScene(const std::filesystem::path& path)
+	{
+		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+
+		SceneSerializer serializer(m_ActiveScene);
+		serializer.Deserialize(path.string());
+	}
+
+	void EditorLayer::SaveSceneAs()
+	{
+		std::string filepath = FileDialogs::SaveFile("Arc Scene (*.arc)\0*.arc\0");
+		if (!filepath.empty())
+		{
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Serialize(filepath);
+		}
+	}
+
 }
