@@ -1,12 +1,12 @@
 #pragma once
 #include "Arc/Scene/SceneCamera.h"
 #include "Arc/Scene/ScriptableEntity.h"
+#include "Arc/Core/UUID.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "Arc/Renderer/Texture.h"
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
-#include "Arc/Core/UUID.h"
 
 namespace ArcEngine {
 
@@ -14,6 +14,7 @@ namespace ArcEngine {
 	{
 		UUID ID = 0;
 	};
+
 
 	struct TagComponent
 	{
@@ -92,6 +93,39 @@ namespace ArcEngine {
 		// TODO: C# script
 		std::string ModuleName;
 	};
+
+	// Physics
+	struct Rigidbody2DComponent
+	{
+		enum class BodyType { Static = 0, Dynamic, Kinematic };
+		BodyType Type;
+		bool FixedRotation = false;
+
+		// Storage for runtime
+		void* RuntimeBody = nullptr;
+
+		Rigidbody2DComponent() = default;
+		Rigidbody2DComponent(const Rigidbody2DComponent& other) = default;
+	};
+
+	struct BoxCollider2DComponent
+	{
+		glm::vec2 Offset = { 0.0f, 0.0f };
+		glm::vec2 Size = { 0.5f, 0.5f };
+
+		// TODO(Yan): move into physics material in the future maybe
+		float Density = 1.0f;
+		float Friction = 0.5f;
+		float Restitution = 0.0f;
+		float RestitutionThreshold = 0.5f;
+
+		// Storage for runtime
+		void* RuntimeFixture = nullptr;
+
+		BoxCollider2DComponent() = default;
+		BoxCollider2DComponent(const BoxCollider2DComponent& other) = default;
+	};
+
 
 
 }

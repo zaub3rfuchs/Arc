@@ -2,6 +2,7 @@
 #include "Arc/Utils/PlatformUtils.h"
 #include "Arc/Scene/SceneSerializer.h"
 #include <imgui/imgui.h>
+#include "iostream"
 #include "../EditorLayer.h";
 
 namespace ArcEngine {
@@ -32,36 +33,29 @@ namespace ArcEngine {
 
 	void FileMenu::NewScene()
 	{
-		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene = Ref<Scene>::Create();
 		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		m_SceneHierarchyPanel->SetContext(m_ActiveScene);
 	}
 
 	void FileMenu::OpenScene()
 	{
-		std::optional<std::string> filepath = FileDialogs::OpenFile("Arc Scene (*.arc)\0*.arc\0");
-		if (filepath)
-		{
-			OpenScene(*filepath);
-		}
+		const std::string filepath = FileDialogs::OpenFile("Arc Scene (*.arc)\0*.arc\0");
+		if (!filepath.empty())
+			OpenScene(filepath);
 	}
 
 	void FileMenu::OpenScene(const std::filesystem::path& path)
 	{
-		std::string filepath = FileDialogs::OpenFile("Arc Scene (*.arc)\0*.arc\0");
-		if (!filepath.empty())
-		{
-			memcpy(&m_ActiveScene, &CreateRef<Scene>(), 2 * sizeof(float));
-			m_ActiveScene = CreateRef<Scene>();
-			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-			m_SceneHierarchyPanel->SetContext(m_ActiveScene);
+		m_ActiveScene = Ref<Scene>::Create();
+		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_SceneHierarchyPanel->SetContext(m_ActiveScene);
 
-			SceneSerializer serializer(m_ActiveScene);
-			serializer.Deserialize(filepath);
-		}
+		SceneSerializer serializer(m_ActiveScene);
+		serializer.Deserialize(path.string());
 	}
 
-	void FileMenu::SaveSceneAs()
+	void FileMenu::SaveSceneAs() const
 	{
 		std::string filepath = FileDialogs::SaveFile("Arc Scene (*.arc)\0*.arc\0");
 		if (!filepath.empty())

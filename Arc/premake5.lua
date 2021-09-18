@@ -42,6 +42,7 @@ project "Arc"
 		"%{IncludeDir.GLFW}",
 		"%{IncludeDir.Glad}",
 		"%{IncludeDir.ImGui}",
+		"%{IncludeDir.Box2D}",
 		"%{IncludeDir.glm}",
 		"%{IncludeDir.stb_image}",
 		"%{IncludeDir.entt}",
@@ -53,6 +54,7 @@ project "Arc"
 	links
 	{
 		"GLFW",
+		"Box2D",
 		"Glad",
 		"ImGui",
 		"yaml-cpp",

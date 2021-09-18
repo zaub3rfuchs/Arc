@@ -22,6 +22,7 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 --Include directories relative to root folder (solution directory)
 IncludeDir = {}
+IncludeDir["Box2D"] = "%{wks.location}/Arc/vendor/Box2D/include"
 IncludeDir["GLFW"] = "%{wks.location}/Arc/vendor/GLFW/include"
 IncludeDir["Glad"] = "%{wks.location}/Arc/vendor/Glad/include"
 IncludeDir["ImGui"] = "%{wks.location}/Arc/vendor/imgui"
@@ -41,6 +42,7 @@ group "Dependencies"
 	include "Arc/vendor/GLFW"
 	include "Arc/vendor/Glad"
 	include "Arc/vendor/imgui"
+	include "Arc/vendor/Box2D"
 	include "Arc/vendor/yaml-cpp"
 group ""
 

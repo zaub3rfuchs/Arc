@@ -19,3 +19,6 @@
 [submodule "Arc/vendor/yaml-cpp"]
 	path = Arc/vendor/yaml-cpp
 	url = https://github.com/zaub3rfuchs/yaml-cpp
+[submodule "Arc/vendor/Box2D"]
+	path = Arc/vendor/Box2D
+	url = https://github.com/zaub3rfuchs/box2d

@@ -21,6 +21,8 @@ namespace ArcEngine {
 
 	void EditorLayer::OnAttach()
 	{
+		m_IconPlay = Texture2D::Create("Resources/Icons/PlayButton.png");
+		m_IconStop = Texture2D::Create("Resources/Icons/StopButton.png");
 
 		FramebufferSpecification fbSpec;
 		fbSpec.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::RED_INTEGER, FramebufferTextureFormat::Depth };
@@ -28,16 +30,31 @@ namespace ArcEngine {
 		fbSpec.Height = 720;
 		m_Framebuffer = Framebuffer::Create(fbSpec);
 
-		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene = Ref<Scene>::Create();
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
 
+
+		//int* ptr = new int(1);
+		//std::cout << ptr << std::endl;   // speicherstelle des pointers
+		//std::cout << &ptr << std::endl;  // speicherstelle auf die der pointer zeigt
+		//std::cout << *ptr << std::endl;  // inhalt der speicherzelle auf die der pointer zeigt
+		//std::cout << "---------" << std::endl;
+
+		//int* ptr2 = ptr;
+		//*ptr2 = *(new int(2));
+		//std::cout << *ptr << std::endl;
+
+
+
+		//std::cout << m_ActiveScene.Raw() << std::endl;
+		//std::cout << &m_ActiveScene << std::endl;
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 		
 		
 
-		m_FileMenu.setViewportSize(m_ViewportSize);
-		m_FileMenu.setSceneHierarchyPanel(&m_SceneHierarchyPanel);
-		//m_FileMenu.setActiveScene(m_ActiveScene);
+		m_FileMenu.SetViewportSize(m_ViewportSize);
+		m_FileMenu.SetSceneHierarchyPanel(&m_SceneHierarchyPanel);
+		m_FileMenu.SetActiveScene(m_ActiveScene);
 	}
 
 	void EditorLayer::OnDetach()
@@ -68,16 +85,36 @@ namespace ArcEngine {
 		// Render
 		Renderer2D::ResetStats();
 		m_Framebuffer->Bind();
-		
+		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+		RenderCommand::Clear();
 
 		// Clear our entity ID attachment to -1
 		m_Framebuffer->ClearAttachment(1, -1);
+
 
 		// set Viewport
 		if (m_eViewportFocused && m_RuntimeViewport.isViewportFocused())
 			m_eViewportFocused = false;
 		if (m_eViewportFocused == false && m_EditorViewport.isViewportFocused())
 			m_eViewportFocused = true;
+
+		switch (m_SceneState)
+		{
+			case SceneState::Edit:
+			{
+				if (m_ViewportFocused)
+
+					m_EditorCamera.OnUpdate(ts);
+
+					m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+					break;
+			}
+			case SceneState::Play:
+			{
+					m_ActiveScene->OnUpdateRuntime(ts);
+					break;
+			}
+		}
 
 		// Update EditorScene or RuntimeScene
 		if (!m_eViewportFocused)
@@ -105,7 +142,8 @@ namespace ArcEngine {
 		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
 		{
 			int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
-			m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.get());
+			ARC_CORE_WARN("pixeldata {0}", pixelData);
+			m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.Raw());
 		}
 
  		m_Framebuffer->Unbind();
@@ -171,10 +209,12 @@ namespace ArcEngine {
 	{
 		EditorLayer::ImGuiInit();
 
+		UI_Toolbar();
 		//Render Panels
 		m_SceneHierarchyPanel.OnImGuiRender();
 		m_ContentBrowserPanel.OnImGuiRender();
 		m_StatusPanel.OnImGuiRender();
+		//m_FileMenu.OnImGuiRender();
 
 
 
@@ -197,7 +237,6 @@ namespace ArcEngine {
 
 			ImGui::EndMenuBar();
 		}
-		//m_FileMenu.OnImGuiRender();
 
 
 		m_RuntimeViewport.OnImGuiRender();
@@ -263,8 +302,52 @@ namespace ArcEngine {
 			ImGuizmo::Enable(!m_EditorCamera.isMoving());
 		}
 		ImGui::End();
+
+
 		ImGui::End();
 	}
+
+	void EditorLayer::UI_Toolbar()
+	{
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 2));
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 0));
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
+		auto& colors = ImGui::GetStyle().Colors;
+		const auto& buttonHovered = colors[ImGuiCol_ButtonHovered];
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(buttonHovered.x, buttonHovered.y, buttonHovered.z, 0.5f));
+		const auto& buttonActive = colors[ImGuiCol_ButtonActive];
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(buttonActive.x, buttonActive.y, buttonActive.z, 0.5f));
+
+		ImGui::Begin("##toolbar", nullptr, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+		float size = ImGui::GetWindowHeight() - 4.0f;
+		Ref<Texture2D> icon = m_SceneState == SceneState::Edit ? m_IconPlay : m_IconStop;
+		ImGui::SetCursorPosX((ImGui::GetWindowContentRegionMax().x * 0.5f) - (size * 0.5f));
+		if (ImGui::ImageButton((ImTextureID)icon->GetRendererID(), ImVec2(size, size), ImVec2(0, 0), ImVec2(1, 1), 0))
+		{
+			if (m_SceneState == SceneState::Edit)
+				OnScenePlay();
+			else if (m_SceneState == SceneState::Play)
+				OnSceneStop();
+		}
+		ImGui::PopStyleVar(2);
+		ImGui::PopStyleColor(3);
+
+		ImGui::End();
+	}
+
+	void EditorLayer::OnScenePlay()
+	{
+		m_ActiveScene->OnRuntimeStart();
+		m_SceneState = SceneState::Play;
+	}
+
+	void EditorLayer::OnSceneStop()
+	{
+		m_ActiveScene->OnRuntimeStop();
+		m_SceneState = SceneState::Edit;
+	}
+
 
 	void EditorLayer::OnEvent(Event& e)
 	{
@@ -324,7 +407,7 @@ namespace ArcEngine {
 
 	void EditorLayer::NewScene()
 	{
-		m_ActiveScene = CreateRef<Scene>();
+		m_ActiveScene = Ref<Scene>::Create();
 		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 	}
@@ -338,12 +421,20 @@ namespace ArcEngine {
 
 	void EditorLayer::OpenScene(const std::filesystem::path& path)
 	{
-		m_ActiveScene = CreateRef<Scene>();
-		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+		if (path.extension().string() != ".arc")
+		{
+			ARC_WARN("Could not load {0} - not a scene file", path.filename().string());
+			return;
+		}
 
-		SceneSerializer serializer(m_ActiveScene);
-		serializer.Deserialize(path.string());
+		Ref<Scene> newScene = Ref<Scene>::Create();
+		SceneSerializer serializer(newScene);
+		if (serializer.Deserialize(path.string()))
+		{
+			m_ActiveScene = newScene;
+			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+		}
 	}
 
 	void EditorLayer::SaveSceneAs()

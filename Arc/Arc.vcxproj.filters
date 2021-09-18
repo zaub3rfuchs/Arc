@@ -105,6 +105,9 @@
     <ClInclude Include="src\Arc\Core\PlatformDetection.h">
       <Filter>src\Arc\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Arc\Core\Ref.h">
+      <Filter>src\Arc\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Arc\Core\Timestep.h">
       <Filter>src\Arc\Core</Filter>
     </ClInclude>

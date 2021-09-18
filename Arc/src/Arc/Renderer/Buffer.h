@@ -100,7 +100,7 @@ namespace ArcEngine {
 		uint32_t m_Stride = 0;
 	};
 
-	class VertexBuffer
+	class VertexBuffer : public RefCounted
 	{
 	public:
 		virtual ~VertexBuffer() = default;
@@ -120,7 +120,7 @@ namespace ArcEngine {
 	};
 
 	// Currently ArcEngine only supports 32-bit indexbuffers
-	class IndexBuffer
+	class IndexBuffer : public RefCounted
 	{
 	public:
 		virtual ~IndexBuffer() = default;

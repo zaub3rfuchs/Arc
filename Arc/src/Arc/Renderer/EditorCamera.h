@@ -4,7 +4,6 @@
 #include "Arc/Core/Timestep.h"
 #include "Arc/Events/Event.h"
 #include "Arc/Events/MouseEvent.h"
-
 #include <glm/glm.hpp>
 
 namespace ArcEngine {

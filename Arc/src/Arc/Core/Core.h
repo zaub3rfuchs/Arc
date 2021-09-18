@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "Arc/Core/PlatformDetection.h"
+#include "Ref.h"
 
 // DLL support
 #ifdef ARC_PLATFORM_WINDOWS
@@ -38,6 +39,7 @@
 #define ARC_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 
 namespace ArcEngine {
+
 	template<typename T>
 	using Scope = std::unique_ptr<T>;
 	template<typename T, typename ... Args>
@@ -46,12 +48,12 @@ namespace ArcEngine {
 		return std::make_unique<T>(std::forward<Args>(args)...);
 	}
 
-	template<typename T>
-	using Ref = std::shared_ptr<T>;
-	template<typename T, typename ... Args>
-	constexpr Ref<T> CreateRef(Args&& ... args)
-	{
-		return std::make_shared<T>(std::forward<Args>(args)...);
-	}
+	//template<typename T>
+	//using Ref = std::shared_ptr<T>;
+	//template<typename T, typename ... Args>
+	//constexpr Ref<T> CreateRef(Args&& ... args)
+	//{
+	//	return std::make_shared<T>(std::forward<Args>(args)...);
+	//}
 
 }

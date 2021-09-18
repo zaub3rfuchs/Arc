@@ -4,13 +4,56 @@
 #include "Components.h"
 #include "Arc/Renderer/Renderer2D.h"
 #include "Arc/Renderer/RenderCommand.h"
+#include "box2d/b2_world.h"
+#include "box2d/b2_body.h"
+#include "box2d/b2_polygon_shape.h"
+#include "box2d/b2_fixture.h"
 
 #include <glm/glm.hpp>
 
 namespace ArcEngine {
 
+	//struct Box2DWorldComponent
+	//{
+		//	std::unique_ptr<> World;
+	//};
+
+	static std::unordered_map<UUID, Scene*> s_ActiveScenes;
+
+	static b2BodyType ArcRigidbody2DTypeToBox2D(Rigidbody2DComponent::BodyType bodyType)
+	{
+		switch (bodyType)
+		{
+		case Rigidbody2DComponent::BodyType::Static:    return b2_staticBody;
+		case Rigidbody2DComponent::BodyType::Dynamic:   return b2_dynamicBody;
+		case Rigidbody2DComponent::BodyType::Kinematic: return b2_kinematicBody;
+		}
+	}
+
+	Scene::Scene()
+	{
+		// Create Scene entity
+		m_SceneEntity = m_Registry.create();
+		m_Registry.emplace<IDComponent>(m_SceneEntity, m_SceneID);
+	}
+
+	Scene::~Scene()
+	{
+	}
+
 	Entity Scene::CreateEntity(const std::string& name)
 	{
+	/*	Entity entity = { m_Registry.create(), this };
+		auto& idComponent = entity.AddComponent<IDComponent>();
+		idComponent.ID = {};
+
+		entity.AddComponent<TransformComponent>();
+		auto& tag = entity.AddComponent<TagComponent>();
+		tag.Tag = name.empty() ? "Entity" : name;
+
+		m_EntityIDMap[idComponent.ID] = entity;
+		return entity;*/
+
 		Entity entity = { m_Registry.create(), this };
 		entity.AddComponent<TransformComponent>();
 		auto& tag = entity.AddComponent<TagComponent>();
@@ -23,27 +66,98 @@ namespace ArcEngine {
 		m_Registry.destroy(entity);
 	}
 
+	void Scene::OnRuntimeStart()
+	{
+		// create box2d world
+		s_ActiveScenes[m_SceneID] = this;
+
+		// Create physics world and add bodies
+		m_Box2DWorld = new b2World({ 0.0f, -9.8f });
+		auto view = m_Registry.view<Rigidbody2DComponent>();
+		for (auto e : view)
+		{
+			Entity entity = { e, this };
+			auto& transform = entity.GetComponent<TransformComponent>();
+			auto& rb2d = entity.GetComponent<Rigidbody2DComponent>();
+
+			b2BodyDef bodyDef;
+			bodyDef.type = ArcRigidbody2DTypeToBox2D(rb2d.Type);
+			bodyDef.position.Set(transform.Translation.x, transform.Translation.y);
+			bodyDef.angle = transform.Rotation.z;
+
+			b2Body* body = m_Box2DWorld->CreateBody(&bodyDef);
+			body->SetFixedRotation(rb2d.FixedRotation);
+			rb2d.RuntimeBody = body;
+
+			if (entity.HasComponent<BoxCollider2DComponent>())
+			{
+				auto& bc2d = entity.GetComponent<BoxCollider2DComponent>();
+
+				b2PolygonShape polygonShape;
+				polygonShape.SetAsBox(bc2d.Size.x * transform.Scale.x, bc2d.Size.y * transform.Scale.y);
+
+				b2FixtureDef fixtureDef;
+				fixtureDef.shape = &polygonShape;
+				fixtureDef.density = bc2d.Density;
+				fixtureDef.friction = bc2d.Friction;
+				fixtureDef.restitution = bc2d.Restitution;
+				fixtureDef.restitutionThreshold = bc2d.RestitutionThreshold;
+				body->CreateFixture(&fixtureDef);
+			}
+		}
+	}
+
+	void Scene::OnRuntimeStop()
+	{
+		// destroy box2d world
+		s_ActiveScenes.erase(m_SceneID);
+		delete m_Box2DWorld;
+		m_Box2DWorld = nullptr;
+	}
+
 	void Scene::OnUpdateRuntime(Timestep ts)
 	{
 
 		// Update scripts
 		{
 			m_Registry.view<NativeScriptComponent>().each([=](auto entity, auto& nsc)
+			{
+				if (nsc.hasScriptAttached)
 				{
-					if (nsc.hasScriptAttached) 
+					if (!nsc.Instance)
 					{
-						if (!nsc.Instance)
-						{
-							nsc.Instance = nsc.InstantiateScript();
-							nsc.Instance->m_Entity = Entity{ entity, this };
+						nsc.Instance = nsc.InstantiateScript();
+						nsc.Instance->m_Entity = Entity{ entity, this };
 
-							nsc.Instance->OnCreate();
-						}
-
-						nsc.Instance->OnUpdate(ts);
+						nsc.Instance->OnCreate();
 					}
+
+					nsc.Instance->OnUpdate(ts);
+				}
 					
-				});
+			});
+		}
+
+		// Update physics
+		{
+			const int32_t velocityIterations = 6;
+			const int32_t positionIterations = 2;
+			m_Box2DWorld->Step(ts, velocityIterations, positionIterations);
+
+			// retrieve transform from box2d
+			auto view = m_Registry.view<Rigidbody2DComponent>();
+			for (auto e : view)
+			{
+				Entity entity = { e, this };
+				auto& transform = entity.GetComponent<TransformComponent>();
+				auto& rb2d = entity.GetComponent<Rigidbody2DComponent>();
+				b2Body* body = (b2Body*)rb2d.RuntimeBody;
+				const auto& position = body->GetPosition();
+				transform.Translation.x = position.x;
+				transform.Translation.y = position.y;
+				transform.Rotation.z = body->GetAngle();
+			}
+
 		}
 
 
@@ -86,8 +200,8 @@ namespace ArcEngine {
 	{
 		Renderer2D::BeginScene(camera);
 
-		RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-		RenderCommand::Clear();
+		//RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
+		//RenderCommand::Clear();
 
 		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
 		for (auto entity : group)
@@ -133,12 +247,16 @@ namespace ArcEngine {
 	{
 		static_assert(false);
 	}
+	
+	template<>
+	void Scene::OnComponentAdded<IDComponent>(Entity entity, IDComponent& component)
+	{
+	}
 
 	template<>
 	void Scene::OnComponentAdded<TransformComponent>(Entity entity, TransformComponent& component)
 	{
 	}
-
 	template<>
 	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
 	{
@@ -162,6 +280,16 @@ namespace ArcEngine {
 		component.hasScriptAttached = false;
 	}
 
+	template<>
+	void Scene::OnComponentAdded<Rigidbody2DComponent>(Entity entity, Rigidbody2DComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<BoxCollider2DComponent>(Entity entity, BoxCollider2DComponent& component)
+	{
+	}
+
 	void Scene::OnEvent(Event& e)
 	{
 		//if (Input::IsKeyPressed(Key::Escape) && m_IsPlaying == true)
@@ -170,20 +298,6 @@ namespace ArcEngine {
 			ARC_CORE_INFO("Runtime stopped by pressing escape!");
 		}
 	}
-
-	void Scene::OnRuntimeStart()
-	{
-		//Do physics and other runtime stuff (TODO)
-		//m_IsPlaying = true;
-	}
-
-	void Scene::OnRuntimeStop()
-	{
-		//Input::SetCursorMode(MousePointerMode::Normal);
-		//Cleanup physics stuff (TODO)
-		//m_IsPlaying = false;
-	}
-
 
 	void Scene::ClearRegistry()
 	{
@@ -209,40 +323,40 @@ namespace ArcEngine {
 		}
 	}
 
-	//Entity Scene::CreateEntityWithID(UUID uuid, const std::string& name, bool runtimeMap)
-	//{
-	//	auto entity = Entity{ m_Registry.create(), this };
-	//	auto& idComponent = entity.AddComponent<IDComponent>();
-	//	idComponent.ID = uuid;
+	Entity Scene::CreateEntityWithID(UUID uuid, const std::string& name, bool runtimeMap)
+	{
+		auto entity = Entity{ m_Registry.create(), this };
+		auto& idComponent = entity.AddComponent<IDComponent>();
+		idComponent.ID = uuid;
 
-	//	entity.AddComponent<TransformComponent>(glm::mat4(1.0f));
-	//	if (!name.empty())
-	//		entity.AddComponent<TagComponent>(name);
+		entity.AddComponent<TransformComponent>(glm::vec3(1.0f));
+		if (!name.empty())
+			entity.AddComponent<TagComponent>(name);
 
-	//	ARC_CORE_ASSERT(m_EntityIDMap.find(uuid) == m_EntityIDMap.end());
-	//	//m_EntityIDMap[uuid] = entity;
-	//	return entity;
-	//}
-
-
+		ARC_CORE_ASSERT(m_EntityIDMap.find(uuid) == m_EntityIDMap.end());
+		//m_EntityIDMap[uuid] = entity;
+		return entity;
+	}
 
 
-	//void Scene::CopySceneTo(Ref<Scene>& target)
-	//{
-	//	std::unordered_map<UUID, entt::entity> enttMap;
-	//	auto idComponents = m_Registry.view<IDComponent>();
-	//	for (auto entity : idComponents)
-	//	{
-	//		auto uuid = m_Registry.get<IDComponent>(entity).ID;
-	//		Entity e = target->CreateEntityWithID(uuid, "", true);
-	//	
-	//	}
 
-	//	CopyComponent<TagComponent>(target->m_Registry, m_Registry, enttMap);
-	//	CopyComponent<TransformComponent>(target->m_Registry, m_Registry, enttMap);
-	//	CopyComponent<CameraComponent>(target->m_Registry, m_Registry, enttMap);
-	//	CopyComponent<SpriteRendererComponent>(target->m_Registry, m_Registry, enttMap);
-	//}
+
+	void Scene::CopySceneTo(Ref<Scene>& target)
+	{
+		std::unordered_map<UUID, entt::entity> enttMap;
+		auto idComponents = m_Registry.view<IDComponent>();
+		for (auto entity : idComponents)
+		{
+			auto uuid = m_Registry.get<IDComponent>(entity).ID;
+			Entity e = target->CreateEntityWithID(uuid, "", true);
+		
+		}
+
+		CopyComponent<TagComponent>(target->m_Registry, m_Registry, enttMap);
+		CopyComponent<TransformComponent>(target->m_Registry, m_Registry, enttMap);
+		CopyComponent<CameraComponent>(target->m_Registry, m_Registry, enttMap);
+		CopyComponent<SpriteRendererComponent>(target->m_Registry, m_Registry, enttMap);
+	}
 
 
 

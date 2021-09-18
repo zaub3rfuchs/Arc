@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Arc/Core/Core.h"
+
 #include <glm/glm.hpp>
 
 namespace ArcEngine {

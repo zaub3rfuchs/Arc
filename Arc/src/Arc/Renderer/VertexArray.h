@@ -5,7 +5,7 @@
 
 namespace ArcEngine {
 
-	class VertexArray
+	class VertexArray : public RefCounted
 	{
 	public:
 		virtual ~VertexArray() = default;

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Arc/Core/Core.h"
-
 namespace ArcEngine {
 
 	enum class FramebufferTextureFormat
@@ -47,7 +45,7 @@ namespace ArcEngine {
 		bool SwapChainTarget = false;
 	};
 
-	class Framebuffer
+	class Framebuffer : public RefCounted
 	{
 	public:
 		virtual ~Framebuffer() = default;

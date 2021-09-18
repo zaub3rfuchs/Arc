@@ -5,15 +5,17 @@
 #include "Arc/Core/UUID.h"
 #include "entt.hpp"
 
+class b2World;
+
 namespace ArcEngine {
 
 	class Entity;
 
-	class Scene
+	class Scene : public RefCounted
 	{
 	public:
-		Scene() = default;
-		~Scene() = default;
+		Scene();
+		~Scene();
 
 		void	DestroyEntity(Entity entity);
 
@@ -23,8 +25,9 @@ namespace ArcEngine {
 		void	OnEvent(Event& e);
 
 		void	OnRuntimeStart();
-		void	OnUpdateRuntime(Timestep ts);
 		void	OnRuntimeStop();
+
+		void	OnUpdateRuntime(Timestep ts);
 
 		void	ClearRegistry();
 
@@ -37,8 +40,15 @@ namespace ArcEngine {
 		template<typename T>
 		void OnComponentAdded(Entity entity, T& component);
 	private:
+		UUID m_SceneID;
 		entt::registry	m_Registry;
 		uint32_t		m_ViewportWidth = 0, m_ViewportHeight = 0;
+
+		std::unordered_map<UUID, Entity> m_EntityIDMap;
+
+		entt::entity m_SceneEntity;
+
+		b2World* m_Box2DWorld = nullptr;
 
 		friend class	Entity;
 		friend class	SceneSerializer;

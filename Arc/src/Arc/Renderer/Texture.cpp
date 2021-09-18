@@ -11,7 +11,7 @@ namespace ArcEngine {
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:    ARC_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-		case RendererAPI::API::OpenGL:  return CreateRef<OpenGLTexture2D>(format, width, height);
+		case RendererAPI::API::OpenGL:  return Ref<OpenGLTexture2D>::Create(format, width, height);
 		}
 
 		ARC_CORE_ASSERT(false, "Unknown RendererAPI!");
@@ -23,7 +23,7 @@ namespace ArcEngine {
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:    ARC_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-		case RendererAPI::API::OpenGL:  return CreateRef<OpenGLTexture2D>(path);
+		case RendererAPI::API::OpenGL:  return Ref<OpenGLTexture2D>::Create(path);
 		}
 
 		ARC_CORE_ASSERT(false, "Unknown RendererAPI!");
