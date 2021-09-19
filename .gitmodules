@@ -22,3 +22,4 @@
 [submodule "Arc/vendor/Box2D"]
 	path = Arc/vendor/Box2D
 	url = https://github.com/zaub3rfuchs/box2d
+	branch = master
