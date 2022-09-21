@@ -31,12 +31,27 @@ namespace ArcEngine {
 		void	OnRuntimeStart();
 		void	OnRuntimeStop();
 
+		void	OnSimulationStart();
+		void	OnSimulationStop();
+
 		void	OnUpdateRuntime(Timestep ts);
+		void	OnUpdateSimulation(Timestep ts, EditorCamera& camera);
 		void	OnUpdateEditor(Timestep ts, EditorCamera& camera);
 
 		void	DuplicateEntity(Entity entity);
 
 		Entity	GetPrimaryCameraEntity();
+
+		template<typename... Components>
+		auto GetAllEntitiesWith()
+		{
+			return m_Registry.view<Components...>();
+		}
+
+		void OnPhysics2DStart();
+		void OnPhysics2DStop();
+
+		void RenderScene(EditorCamera& camera);
 	private:
 		template<typename T>
 		void OnComponentAdded(Entity entity, T& component);
@@ -46,7 +61,7 @@ namespace ArcEngine {
 
 		entt::entity m_SceneEntity;
 
-		b2World* m_Box2DWorld = nullptr;
+		b2World* m_PhysicsWorld = nullptr;
 
 		friend class	Entity;
 		friend class	SceneSerializer;

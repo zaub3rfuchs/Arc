@@ -9,6 +9,8 @@ namespace ArcEngine
 {
 	void EditorViewport::OnImGuiRender()
 	{
+		
+
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2{ 0, 0 });
 		ImGui::Begin("Viewport");
 		auto viewportMinRegion = ImGui::GetWindowContentRegionMin();

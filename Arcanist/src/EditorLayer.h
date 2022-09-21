@@ -32,6 +32,8 @@ namespace ArcEngine {
 		bool				OnKeyPressed(KeyPressedEvent& e);
 		bool				OnMouseButtonPressed(MouseButtonPressedEvent& e);
 
+		void				OnOverlayRender();
+
 		void				NewScene();
 		void				OpenScene();
 		void				OpenScene(const std::filesystem::path& path);
@@ -42,6 +44,7 @@ namespace ArcEngine {
 
 
 		void				OnScenePlay();
+		void				OnSceneSimulate();
 		void				OnSceneStop();
 
 		void				OnDuplicateEntity();
@@ -75,10 +78,11 @@ namespace ArcEngine {
 		glm::vec2					m_ViewportSize	= { 0.0f, 0.0f };
 		glm::vec2					m_ViewportBounds[2];
 
+		bool m_ShowPhysicsColliders = false;
 
 		enum class SceneState
 		{
-			Edit = 0, Play = 1
+			Edit = 0, Play = 1, Simulate = 2
 		};
 		SceneState					m_SceneState = SceneState::Edit;
 
@@ -95,7 +99,7 @@ namespace ArcEngine {
 		FileMenu					m_FileMenu;
 
 		// Editor resources
-		Ref<Texture2D> m_IconPlay, m_IconStop;
+		Ref<Texture2D> m_IconPlay, m_IconSimulate, m_IconStop;
 	};
 
 }
