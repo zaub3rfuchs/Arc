@@ -5,7 +5,7 @@
 
 namespace ArcEngine {
 
-	class ARC_API KeyEvent : public Event
+	class KeyEvent : public Event
 	{
 	public:
 		KeyCode GetKeyCode() const { return m_KeyCode; }
@@ -18,7 +18,7 @@ namespace ArcEngine {
 		KeyCode m_KeyCode;
 	};
 
-	class ARC_API KeyPressedEvent : public KeyEvent
+	class KeyPressedEvent : public KeyEvent
 	{
 	public:
 		KeyPressedEvent(const KeyCode keycode, const uint16_t repeatCount)
@@ -38,7 +38,7 @@ namespace ArcEngine {
 		uint16_t m_RepeatCount;
 	};
 
-	class ARC_API KeyReleasedEvent : public KeyEvent
+	class KeyReleasedEvent : public KeyEvent
 	{
 	public:
 		KeyReleasedEvent(const KeyCode keycode)
@@ -54,7 +54,7 @@ namespace ArcEngine {
 		EVENT_CLASS_TYPE(KeyReleased)
 	};
 
-	class ARC_API KeyTypedEvent : public KeyEvent
+	class KeyTypedEvent : public KeyEvent
 	{
 	public:
 		KeyTypedEvent(const KeyCode keycode)

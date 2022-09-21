@@ -14,7 +14,7 @@ namespace ArcEngine {
 		void	SetPerspective(float verticalFOV, float nearClip, float farClip);	
 		void	SetOrthographic(float size, float nearClip, float farClip);
 
-		void	SetViewportSize(uint32_t width, uint32_t height)	{ m_AspectRatio = (float)width / (float)height; CalculateProjection(); };
+		void	SetViewportSize(uint32_t width, uint32_t height)	{ ARC_CORE_ASSERT(width > 0 && height > 0); m_AspectRatio = (float)width / (float)height; CalculateProjection(); }
 		void	SetBackgroundColor(glm::vec4 bgColor)				{ m_BackgroundColor = bgColor; }
 		float	GetPerspectiveVerticalFOV() const					{ return m_PerspectiveFOV; }
 		void	SetPerspectiveVerticalFOV(float verticalFov)		{ m_PerspectiveFOV = verticalFov; CalculateProjection(); }

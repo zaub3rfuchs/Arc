@@ -31,26 +31,17 @@ namespace ArcEngine {
 		m_Framebuffer = Framebuffer::Create(fbSpec);
 
 		m_ActiveScene = Ref<Scene>::Create();
+
+		auto commandLineArgs = Application::Get().GetCommandLineArgs();
+		if (commandLineArgs.Count > 1)
+		{
+			auto sceneFilePath = commandLineArgs[1];
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Deserialize(sceneFilePath);
+		}
 		m_EditorCamera = EditorCamera(30.0f, 1.778f, 0.1f, 1000.0f);
-
-
-		//int* ptr = new int(1);
-		//std::cout << ptr << std::endl;   // speicherstelle des pointers
-		//std::cout << &ptr << std::endl;  // speicherstelle auf die der pointer zeigt
-		//std::cout << *ptr << std::endl;  // inhalt der speicherzelle auf die der pointer zeigt
-		//std::cout << "---------" << std::endl;
-
-		//int* ptr2 = ptr;
-		//*ptr2 = *(new int(2));
-		//std::cout << *ptr << std::endl;
-
-
-
-		//std::cout << m_ActiveScene.Raw() << std::endl;
-		//std::cout << &m_ActiveScene << std::endl;
-		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
-		
-		
+		std::vector<int> test;
+		test.emplace_back(10);
 
 		m_FileMenu.SetViewportSize(m_ViewportSize);
 		m_FileMenu.SetSceneHierarchyPanel(&m_SceneHierarchyPanel);
@@ -142,7 +133,6 @@ namespace ArcEngine {
 		if (mouseX >= 0 && mouseY >= 0 && mouseX < (int)viewportSize.x && mouseY < (int)viewportSize.y)
 		{
 			int pixelData = m_Framebuffer->ReadPixel(1, mouseX, mouseY);
-			ARC_CORE_WARN("pixeldata {0}", pixelData);
 			m_HoveredEntity = pixelData == -1 ? Entity() : Entity((entt::entity)pixelData, m_ActiveScene.Raw());
 		}
 
@@ -338,14 +328,22 @@ namespace ArcEngine {
 
 	void EditorLayer::OnScenePlay()
 	{
-		m_ActiveScene->OnRuntimeStart();
 		m_SceneState = SceneState::Play;
+
+		m_ActiveScene = Scene::Copy(m_EditorScene);
+		m_ActiveScene->OnRuntimeStart();
+
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 	}
 
 	void EditorLayer::OnSceneStop()
 	{
-		m_ActiveScene->OnRuntimeStop();
 		m_SceneState = SceneState::Edit;
+
+		m_ActiveScene->OnRuntimeStop();
+		m_ActiveScene = m_EditorScene;
+
+		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
 	}
 
 
@@ -364,33 +362,70 @@ namespace ArcEngine {
 		if (e.GetRepeatCount() > 0)
 			return false;
 
+		bool control = Input::IsKeyPressed(Key::LeftControl) || Input::IsKeyPressed(Key::RightControl);
+		bool shift = Input::IsKeyPressed(Key::LeftShift) || Input::IsKeyPressed(Key::RightShift);
+
 		switch (e.GetKeyCode())
 		{
-			// Gizmos
-			case Key::Q:
+		case Key::N:
+		{
+			if (control)
+				NewScene();
+
+			break;
+		}
+		case Key::O:
+		{
+			if (control)
+				OpenScene();
+
+			break;
+		}
+		case Key::S:
+		{
+			if (control)
 			{
-				if (!ImGuizmo::IsUsing())
-					m_GizmoType = -1;
-				break;
+				if (shift)
+					SaveSceneAs();
+				else
+					SaveScene();
 			}
-			case Key::W:
-			{
-				if (!ImGuizmo::IsUsing())
-					m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
-				break;
-			}
-			case Key::E:
-			{
-				if (!ImGuizmo::IsUsing())
-					m_GizmoType = ImGuizmo::OPERATION::ROTATE;
-				break;
-			}
-			case Key::R:
-			{
-				if (!ImGuizmo::IsUsing())
-					m_GizmoType = ImGuizmo::OPERATION::SCALE;
-				break;
-			}
+
+			break;
+		}
+		// Scene Commands
+		case Key::D:
+		{
+			if (control)
+				OnDuplicateEntity();
+
+			break;
+		}
+		// Gizmos
+		case Key::Q:
+		{
+			if (!ImGuizmo::IsUsing())
+				m_GizmoType = -1;
+			break;
+		}
+		case Key::W:
+		{
+			if (!ImGuizmo::IsUsing())
+				m_GizmoType = ImGuizmo::OPERATION::TRANSLATE;
+			break;
+		}
+		case Key::E:
+		{
+			if (!ImGuizmo::IsUsing())
+				m_GizmoType = ImGuizmo::OPERATION::ROTATE;
+			break;
+		}
+		case Key::R:
+		{
+			if (!ImGuizmo::IsUsing())
+				m_GizmoType = ImGuizmo::OPERATION::SCALE;
+			break;
+		}
 
 		}
 	}
@@ -410,6 +445,8 @@ namespace ArcEngine {
 		m_ActiveScene = Ref<Scene>::Create();
 		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+
+		m_EditorScenePath = std::filesystem::path();
 	}
 
 	void EditorLayer::OpenScene()
@@ -421,7 +458,10 @@ namespace ArcEngine {
 
 	void EditorLayer::OpenScene(const std::filesystem::path& path)
 	{
-		if (path.extension().string() != ".arc")
+		if (m_SceneState != SceneState::Edit)
+			OnSceneStop();
+
+		if (path.extension().string() != ".hazel")
 		{
 			ARC_WARN("Could not load {0} - not a scene file", path.filename().string());
 			return;
@@ -431,10 +471,21 @@ namespace ArcEngine {
 		SceneSerializer serializer(newScene);
 		if (serializer.Deserialize(path.string()))
 		{
-			m_ActiveScene = newScene;
-			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-			m_SceneHierarchyPanel.SetContext(m_ActiveScene);
+			m_EditorScene = newScene;
+			m_EditorScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_SceneHierarchyPanel.SetContext(m_EditorScene);
+
+			m_ActiveScene = m_EditorScene;
+			m_EditorScenePath = path;
 		}
+	}
+
+	void EditorLayer::SaveScene()
+	{
+		if (!m_EditorScenePath.empty())
+			SerializeScene(m_ActiveScene, m_EditorScenePath);
+		else
+			SaveSceneAs();
 	}
 
 	void EditorLayer::SaveSceneAs()
@@ -446,5 +497,19 @@ namespace ArcEngine {
 			serializer.Serialize(filepath);
 		}
 	}
+	void EditorLayer::SerializeScene(Ref<Scene> scene, const std::filesystem::path& path)
+	{
+		SceneSerializer serializer(scene);
+		serializer.Serialize(path.string());
+	}
 
+	void EditorLayer::OnDuplicateEntity()
+	{
+		if (m_SceneState != SceneState::Edit)
+			return;
+
+		Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity();
+		if (selectedEntity)
+			m_EditorScene->DuplicateEntity(selectedEntity);
+	}
 }

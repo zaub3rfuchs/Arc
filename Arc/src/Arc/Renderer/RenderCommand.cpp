@@ -1,7 +1,6 @@
 #include "apch.h"
 #include "Arc/Renderer/RenderCommand.h"
 
-#include "Platform/OpenGL/OpenGLRendererAPI.h"
 
 namespace ArcEngine {
 

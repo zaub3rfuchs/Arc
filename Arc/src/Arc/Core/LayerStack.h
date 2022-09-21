@@ -7,7 +7,7 @@
 
 namespace ArcEngine {
 
-	class ARC_API LayerStack
+	class LayerStack
 	{
 	public:
 		LayerStack() = default;

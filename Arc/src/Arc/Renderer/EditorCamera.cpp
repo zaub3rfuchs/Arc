@@ -4,6 +4,7 @@
 #include "Arc/Core/Input.h"
 #include "Arc/Core/KeyCodes.h"
 #include "Arc/Core/MouseCodes.h"
+
 #include <glfw/glfw3.h>
 
 #define GLM_ENABLE_EXPERIMENTAL

@@ -2,7 +2,7 @@ project "Arc"
 	kind "StaticLib"
 	language "C++"
 	cppdialect "C++17"
-	staticruntime "on"
+	staticruntime "off"
 
 	targetdir ("%{wks.location}/bin/" .. outputdir .. "/%{prj.name}")
 	objdir ("%{wks.location}/bin-int/" .. outputdir .. "/%{prj.name}")
@@ -10,17 +10,13 @@ project "Arc"
 	pchheader "apch.h"
 	pchsource "src/apch.cpp"
 
-	LibraryDir = {}
-	LibraryDir["mono"] = "vendor/mono/lib/Debug/mono-2.0-sgen.lib"
-
-	
 	files
 	{
 		"src/**.h",
 		"src/**.cpp",
 
-		"vendor/stb_image/**.cpp",
 		"vendor/stb_image/**.h",
+		"vendor/stb_image/**.cpp",
 
 		"vendor/glm/glm/**.hpp",
 		"vendor/glm/glm/**.inl",
@@ -48,7 +44,7 @@ project "Arc"
 		"%{IncludeDir.entt}",
 		"%{IncludeDir.yaml_cpp}",
 		"%{IncludeDir.ImGuizmo}",
-		"%{IncludeDir.mono}"
+		"%{IncludeDir.VulkanSDK}"
 	}
 
 	links
@@ -58,28 +54,51 @@ project "Arc"
 		"Glad",
 		"ImGui",
 		"yaml-cpp",
-		"opengl32.lib",
-		"%{LibraryDir.mono}"
+		"opengl32.lib"
 	}
 
 	filter "files:vendor/ImGuizmo/**.cpp"
-	flags {"NoPCH"}
-
+	flags { "NoPCH" }
 
 	filter "system:windows"
 		systemversion "latest"
+
+		defines
+		{
+		}
 		
-		filter "configurations:Debug"
-			defines "ARC_DEBUG"
-			runtime "Debug"
-			symbols "on"
+	filter "configurations:Debug"
+		defines "ARC_DEBUG"
+		runtime "Debug"
+		symbols "on"
 
-		filter "configurations:Release"
-			defines "ARC_RELEASE"
-			runtime "Release"
-			optimize "on"
+		links
+		{
+			"%{Library.ShaderC_Debug}",
+			"%{Library.SPIRV_Cross_Debug}",
+			"%{Library.SPIRV_Cross_GLSL_Debug}"
+		}
 
-		filter "configurations:Dist"
-			defines "ARC_DIST"
-			runtime "Release"
-			optimize "on"
+	filter "configurations:Release"
+		defines "ARC_RELEASE"
+		runtime "Release"
+		optimize "on"
+
+		links
+		{
+			"%{Library.ShaderC_Release}",
+			"%{Library.SPIRV_Cross_Release}",
+			"%{Library.SPIRV_Cross_GLSL_Release}"
+		}
+
+	filter "configurations:Dist"
+		defines "ARC_DIST"
+		runtime "Release"
+		optimize "on"
+		
+		links
+		{
+			"%{Library.ShaderC_Release}",
+			"%{Library.SPIRV_Cross_Release}",
+			"%{Library.SPIRV_Cross_GLSL_Release}"
+		}

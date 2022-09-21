@@ -1,10 +1,11 @@
 #pragma once
-#include "Arc/Scene/SceneCamera.h"
-#include "Arc/Scene/ScriptableEntity.h"
+#include "SceneCamera.h"
 #include "Arc/Core/UUID.h"
+#include "Arc/Renderer/Texture.h"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "Arc/Renderer/Texture.h"
+
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/quaternion.hpp>
 
@@ -12,9 +13,11 @@ namespace ArcEngine {
 
 	struct IDComponent
 	{
-		UUID ID = 0;
-	};
+		UUID ID;
 
+		IDComponent() = default;
+		IDComponent(const IDComponent&) = default;
+	};
 
 	struct TagComponent
 	{
@@ -60,6 +63,16 @@ namespace ArcEngine {
 			: Color(color) {}
 	};
 
+	struct CircleRendererComponent
+	{
+		glm::vec4 Color{ 1.0f, 1.0f, 1.0f, 1.0f };
+		float Thickness = 1.0f;
+		float Fade = 0.005f;
+
+		CircleRendererComponent() = default;
+		CircleRendererComponent(const CircleRendererComponent&) = default;
+	};
+
 	struct CameraComponent
 	{
 	    SceneCamera Camera;
@@ -69,6 +82,9 @@ namespace ArcEngine {
 		CameraComponent() = default;
 		CameraComponent(const CameraComponent&) = default;
 	};
+
+	// Forward declaration
+	class ScriptableEntity;
 
 	struct NativeScriptComponent
 	{
@@ -125,7 +141,5 @@ namespace ArcEngine {
 		BoxCollider2DComponent() = default;
 		BoxCollider2DComponent(const BoxCollider2DComponent& other) = default;
 	};
-
-
-
+	
 }

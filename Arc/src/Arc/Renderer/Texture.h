@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include <string>
-
 #include "Arc/Core/Core.h"
+
+#include <string>
 
 namespace ArcEngine {
 	// TODO

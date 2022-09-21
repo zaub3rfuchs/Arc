@@ -19,3 +19,8 @@ Directories
 *.log
 **.json
 *.json
+
+# Directories
+Arc/vendor/VulkanSDK
+Arcanist/assets/cache
+scripts/__pycache__

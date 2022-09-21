@@ -14,4 +14,9 @@ namespace ArcEngine {
 		static std::string getFileName(const std::filesystem::path& path);
 	};
 
+	class Time
+	{
+	public:
+		static float GetTime();
+	};
 }

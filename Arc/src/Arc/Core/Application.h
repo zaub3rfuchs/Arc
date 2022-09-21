@@ -14,10 +14,29 @@
 
 namespace ArcEngine {
 
+	struct ApplicationCommandLineArgs
+	{
+		int Count = 0;
+		char** Args = nullptr;
+
+		const char* operator[](int index) const
+		{
+			ARC_CORE_ASSERT(index < Count);
+			return Args[index];
+		}
+	};
+
+	struct ApplicationSpecification
+	{
+		std::string Name = "Arc Application";
+		std::string WorkingDirectory;
+		ApplicationCommandLineArgs CommandLineArgs;
+	};
+
 	class Application
 	{
 	public:
-		Application(const std::string& name = "Arc App");
+		Application(const std::string& name = "Arc App", ApplicationCommandLineArgs args = ApplicationCommandLineArgs());
 		virtual ~Application();
 
 		void Run();
@@ -30,12 +49,14 @@ namespace ArcEngine {
 		void PushLayer(Layer* layer);
 		void PushOverlay(Layer* layer);
 
-		inline static Application& Get() { return *s_Instance; };
-		inline Window& GetWindow() { return *m_Window; };
+		inline static Application& Get() { return *s_Instance; }
+		ApplicationCommandLineArgs GetCommandLineArgs() const { return m_CommandLineArgs; }
+		inline Window& GetWindow() { return *m_Window; }
 	private:
 		bool OnWindowClose(WindowCloseEvent& e);
 		bool OnWindowResize(WindowResizeEvent& e);
 	private:
+		ApplicationCommandLineArgs m_CommandLineArgs;
 		Scope<Window> m_Window;
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
@@ -49,6 +70,6 @@ namespace ArcEngine {
 	};
 
 	// To be defined in CLIENT
-	Application* CreateApplication();
+	Application* CreateApplication(ApplicationCommandLineArgs args);
 
 }

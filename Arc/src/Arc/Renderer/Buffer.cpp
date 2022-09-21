@@ -1,7 +1,6 @@
 
 #include "apch.h"
 #include "Arc/Renderer/Buffer.h"
-
 #include "Arc/Renderer/Renderer.h"
 
 #include "Platform/OpenGL/OpenGLBuffer.h"

@@ -5,6 +5,7 @@
 #include "Components.h"
 
 #include <fstream>
+
 #include <yaml-cpp/yaml.h>
 
 namespace YAML {
@@ -140,7 +141,7 @@ namespace ArcEngine {
 	static void SerializeEntity(YAML::Emitter& out, Entity entity)
 	{
 		out << YAML::BeginMap; // Entity
-		out << YAML::Key << "Entity" << YAML::Value << "12837192831273"; // TODO: Entity ID goes here
+		out << YAML::Key << "Entity" << YAML::Value << entity.GetUUID();
 
 		if (entity.HasComponent<TagComponent>())
 		{
@@ -200,6 +201,19 @@ namespace ArcEngine {
 			out << YAML::Key << "Color" << YAML::Value << spriteRendererComponent.Color;
 
 			out << YAML::EndMap; // SpriteRendererComponent
+		}
+
+		if (entity.HasComponent<CircleRendererComponent>())
+		{
+			out << YAML::Key << "CircleRendererComponent";
+			out << YAML::BeginMap; // CircleRendererComponent
+
+			auto& circleRendererComponent = entity.GetComponent<CircleRendererComponent>();
+			out << YAML::Key << "Color" << YAML::Value << circleRendererComponent.Color;
+			out << YAML::Key << "Thickness" << YAML::Value << circleRendererComponent.Thickness;
+			out << YAML::Key << "Fade" << YAML::Value << circleRendererComponent.Fade;
+
+			out << YAML::EndMap; // CircleRendererComponent
 		}
 
 		if (entity.HasComponent<Rigidbody2DComponent>())
@@ -285,7 +299,7 @@ namespace ArcEngine {
 		{
 			for (auto entity : entities)
 			{
-				uint64_t uuid = entity["Entity"].as<uint64_t>(); // TODO
+				uint64_t uuid = entity["Entity"].as<uint64_t>();
 
 				std::string name;
 				auto tagComponent = entity["TagComponent"];
@@ -294,7 +308,7 @@ namespace ArcEngine {
 
 				ARC_CORE_TRACE("Deserialized entity with ID = {0}, name = {1}", uuid, name);
 
-				Entity deserializedEntity = m_Scene->CreateEntity(name);
+				Entity deserializedEntity = m_Scene->CreateEntityWithUUID(uuid, name);
 
 				auto transformComponent = entity["TransformComponent"];
 				if (transformComponent)
@@ -331,6 +345,15 @@ namespace ArcEngine {
 				{
 					auto& src = deserializedEntity.AddComponent<SpriteRendererComponent>();
 					src.Color = spriteRendererComponent["Color"].as<glm::vec4>();
+				}
+
+				auto circleRendererComponent = entity["CircleRendererComponent"];
+				if (circleRendererComponent)
+				{
+					auto& crc = deserializedEntity.AddComponent<CircleRendererComponent>();
+					crc.Color = circleRendererComponent["Color"].as<glm::vec4>();
+					crc.Thickness = circleRendererComponent["Thickness"].as<float>();
+					crc.Fade = circleRendererComponent["Fade"].as<float>();
 				}
 
 				auto rb2dComponent = entity["Rigidbody2DComponent"];

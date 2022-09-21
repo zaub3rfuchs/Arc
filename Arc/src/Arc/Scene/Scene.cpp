@@ -2,8 +2,9 @@
 #include "Scene.h"
 #include "Entity.h"
 #include "Components.h"
+#include "ScriptableEntity.h"
 #include "Arc/Renderer/Renderer2D.h"
-#include "Arc/Renderer/RenderCommand.h"
+
 #include "box2d/b2_world.h"
 #include "box2d/b2_body.h"
 #include "box2d/b2_polygon_shape.h"
@@ -11,12 +12,9 @@
 
 #include <glm/glm.hpp>
 
-namespace ArcEngine {
+#include "Arc/Renderer/RenderCommand.h"
 
-	//struct Box2DWorldComponent
-	//{
-		//	std::unique_ptr<> World;
-	//};
+namespace ArcEngine {
 
 	static std::unordered_map<UUID, Scene*> s_ActiveScenes;
 
@@ -32,29 +30,76 @@ namespace ArcEngine {
 
 	Scene::Scene()
 	{
-		// Create Scene entity
-		m_SceneEntity = m_Registry.create();
-		m_Registry.emplace<IDComponent>(m_SceneEntity, m_SceneID);
 	}
 
 	Scene::~Scene()
 	{
 	}
 
+	template<typename Component>
+	static void CopyComponent(entt::registry& dst, entt::registry& src, const std::unordered_map<UUID, entt::entity>& enttMap)
+	{
+		auto view = src.view<Component>();
+		for (auto e : view)
+		{
+			UUID uuid = src.get<IDComponent>(e).ID;
+			ARC_CORE_ASSERT(enttMap.find(uuid) != enttMap.end());
+			entt::entity dstEnttID = enttMap.at(uuid);
+
+			auto& component = src.get<Component>(e);
+			dst.emplace_or_replace<Component>(dstEnttID, component);
+		}
+	}
+
+	template<typename Component>
+	static void CopyComponentIfExists(Entity dst, Entity src)
+	{
+		if (src.HasComponent<Component>())
+			dst.AddOrReplaceComponent<Component>(src.GetComponent<Component>());
+	}
+
+	Ref<Scene> Scene::Copy(Ref<Scene> other)
+	{
+		Ref<Scene> newScene = Ref<Scene>::Create();
+
+		newScene->m_ViewportWidth = other->m_ViewportWidth;
+		newScene->m_ViewportHeight = other->m_ViewportHeight;
+
+		auto& srcSceneRegistry = other->m_Registry;
+		auto& dstSceneRegistry = newScene->m_Registry;
+		std::unordered_map<UUID, entt::entity> enttMap;
+
+		// Create entities in new scene
+		auto idView = srcSceneRegistry.view<IDComponent>();
+		for (auto e : idView)
+		{
+			UUID uuid = srcSceneRegistry.get<IDComponent>(e).ID;
+			const auto& name = srcSceneRegistry.get<TagComponent>(e).Tag;
+			Entity newEntity = newScene->CreateEntityWithUUID(uuid, name);
+			enttMap[uuid] = (entt::entity)newEntity;
+		}
+
+		// Copy components (except IDComponent and TagComponent)
+		CopyComponent<TransformComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
+		CopyComponent<SpriteRendererComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
+		CopyComponent<CircleRendererComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
+		CopyComponent<CameraComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
+		CopyComponent<NativeScriptComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
+		CopyComponent<Rigidbody2DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
+		CopyComponent<BoxCollider2DComponent>(dstSceneRegistry, srcSceneRegistry, enttMap);
+
+		return newScene;
+	}
+
 	Entity Scene::CreateEntity(const std::string& name)
 	{
-	/*	Entity entity = { m_Registry.create(), this };
-		auto& idComponent = entity.AddComponent<IDComponent>();
-		idComponent.ID = {};
+		return CreateEntityWithUUID(UUID(), name);
+	}
 
-		entity.AddComponent<TransformComponent>();
-		auto& tag = entity.AddComponent<TagComponent>();
-		tag.Tag = name.empty() ? "Entity" : name;
-
-		m_EntityIDMap[idComponent.ID] = entity;
-		return entity;*/
-
+	Entity Scene::CreateEntityWithUUID(UUID uuid, const std::string& name)
+	{
 		Entity entity = { m_Registry.create(), this };
+		entity.AddComponent<IDComponent>(uuid);
 		entity.AddComponent<TransformComponent>();
 		auto& tag = entity.AddComponent<TagComponent>();
 		tag.Tag = name.empty() ? "Entity" : name;
@@ -68,11 +113,9 @@ namespace ArcEngine {
 
 	void Scene::OnRuntimeStart()
 	{
-		// create box2d world
-		s_ActiveScenes[m_SceneID] = this;
-
 		// Create physics world and add bodies
 		m_Box2DWorld = new b2World({ 0.0f, -9.8f });
+
 		auto view = m_Registry.view<Rigidbody2DComponent>();
 		for (auto e : view)
 		{
@@ -109,8 +152,6 @@ namespace ArcEngine {
 
 	void Scene::OnRuntimeStop()
 	{
-		// destroy box2d world
-		s_ActiveScenes.erase(m_SceneID);
 		delete m_Box2DWorld;
 		m_Box2DWorld = nullptr;
 	}
@@ -151,6 +192,7 @@ namespace ArcEngine {
 				Entity entity = { e, this };
 				auto& transform = entity.GetComponent<TransformComponent>();
 				auto& rb2d = entity.GetComponent<Rigidbody2DComponent>();
+
 				b2Body* body = (b2Body*)rb2d.RuntimeBody;
 				const auto& position = body->GetPosition();
 				transform.Translation.x = position.x;
@@ -163,7 +205,6 @@ namespace ArcEngine {
 
 		// Render 2D
 		Camera* mainCamera = nullptr;
-		glm::vec4 bgColor;
 		glm::mat4 cameraTransform;
 		{
 			auto view = m_Registry.view<TransformComponent, CameraComponent>();
@@ -174,7 +215,6 @@ namespace ArcEngine {
 				{
 					mainCamera = &camera.Camera;
 					cameraTransform = transform.GetTransform();
-					bgColor = camera.Camera.GetBackgroundColor();
 					break;
 				}
 			}
@@ -182,13 +222,26 @@ namespace ArcEngine {
 		if (mainCamera)
 		{
 			Renderer2D::BeginScene(*mainCamera, cameraTransform);
-			RenderCommand::SetClearColor({ bgColor });
-			RenderCommand::Clear();
-			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-			for (auto entity : group)
+			// Draw sprites
 			{
-				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-				Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
+				auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+				for (auto entity : group)
+				{
+					auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+
+					Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
+				}
+			}
+
+			// Draw circles
+			{
+				auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
+				for (auto entity : view)
+				{
+					auto [transform, circle] = view.get<TransformComponent, CircleRendererComponent>(entity);
+
+					Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, (int)entity);
+				}
 			}
 
 			Renderer2D::EndScene();
@@ -200,14 +253,26 @@ namespace ArcEngine {
 	{
 		Renderer2D::BeginScene(camera);
 
-		//RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1 });
-		//RenderCommand::Clear();
-
-		auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
-		for (auto entity : group)
+		// Draw sprites
 		{
-			auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
-			Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
+			auto group = m_Registry.group<TransformComponent>(entt::get<SpriteRendererComponent>);
+			for (auto entity : group)
+			{
+				auto [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+
+				Renderer2D::DrawSprite(transform.GetTransform(), sprite, (int)entity);
+			}
+		}
+
+		// Draw circles
+		{
+			auto view = m_Registry.view<TransformComponent, CircleRendererComponent>();
+			for (auto entity : view)
+			{
+				auto [transform, circle] = view.get<TransformComponent, CircleRendererComponent>(entity);
+
+				Renderer2D::DrawCircle(transform.GetTransform(), circle.Color, circle.Thickness, circle.Fade, (int)entity);
+			}
 		}
 
 		Renderer2D::EndScene();
@@ -230,6 +295,20 @@ namespace ArcEngine {
 
 	}
 
+	void Scene::DuplicateEntity(Entity entity)
+	{
+		std::string name = entity.GetName();
+		Entity newEntity = CreateEntity(name);
+
+		CopyComponentIfExists<TransformComponent>(newEntity, entity);
+		CopyComponentIfExists<SpriteRendererComponent>(newEntity, entity);
+		CopyComponentIfExists<CircleRendererComponent>(newEntity, entity);
+		CopyComponentIfExists<CameraComponent>(newEntity, entity);
+		CopyComponentIfExists<NativeScriptComponent>(newEntity, entity);
+		CopyComponentIfExists<Rigidbody2DComponent>(newEntity, entity);
+		CopyComponentIfExists<BoxCollider2DComponent>(newEntity, entity);
+	}
+
 	Entity Scene::GetPrimaryCameraEntity()
 	{
 		auto view = m_Registry.view<CameraComponent>();
@@ -245,7 +324,7 @@ namespace ArcEngine {
 	template<typename T>
 	void Scene::OnComponentAdded(Entity entity, T& component)
 	{
-		static_assert(false);
+		// static_assert(false);
 	}
 	
 	template<>
@@ -260,11 +339,17 @@ namespace ArcEngine {
 	template<>
 	void Scene::OnComponentAdded<CameraComponent>(Entity entity, CameraComponent& component)
 	{
-		component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
+		if (m_ViewportWidth > 0 && m_ViewportHeight > 0)
+			component.Camera.SetViewportSize(m_ViewportWidth, m_ViewportHeight);
 	}
 
 	template<>
 	void Scene::OnComponentAdded<SpriteRendererComponent>(Entity entity, SpriteRendererComponent& component)
+	{
+	}
+
+	template<>
+	void Scene::OnComponentAdded<CircleRendererComponent>(Entity entity, CircleRendererComponent& component)
 	{
 	}
 
@@ -298,66 +383,4 @@ namespace ArcEngine {
 			ARC_CORE_INFO("Runtime stopped by pressing escape!");
 		}
 	}
-
-	void Scene::ClearRegistry()
-	{
-		auto view = m_Registry.view<TagComponent>();
-		for (auto entity : view)
-		{
-			m_Registry.destroy(entity);
-		}
-		std::cout << m_Registry.empty() << std::endl;
-			//m_Registry.empty();
-	}
-
-	template<typename T>
-	static void CopyComponent(entt::registry& dstRegistry, entt::registry& srcRegistry, const std::unordered_map<UUID, entt::entity>& enttMap)
-	{
-		auto components = srcRegistry.view<T>();
-		for (auto srcEntity : components)
-		{
-			entt::entity destEntity = enttMap.at(srcRegistry.get<IDComponent>(srcEntity).ID);
-
-			auto& srcComponent = srcRegistry.get<T>(srcEntity);
-			auto& destComponent = dstRegistry.emplace_or_replace<T>(destEntity, srcComponent);
-		}
-	}
-
-	Entity Scene::CreateEntityWithID(UUID uuid, const std::string& name, bool runtimeMap)
-	{
-		auto entity = Entity{ m_Registry.create(), this };
-		auto& idComponent = entity.AddComponent<IDComponent>();
-		idComponent.ID = uuid;
-
-		entity.AddComponent<TransformComponent>(glm::vec3(1.0f));
-		if (!name.empty())
-			entity.AddComponent<TagComponent>(name);
-
-		ARC_CORE_ASSERT(m_EntityIDMap.find(uuid) == m_EntityIDMap.end());
-		//m_EntityIDMap[uuid] = entity;
-		return entity;
-	}
-
-
-
-
-	void Scene::CopySceneTo(Ref<Scene>& target)
-	{
-		std::unordered_map<UUID, entt::entity> enttMap;
-		auto idComponents = m_Registry.view<IDComponent>();
-		for (auto entity : idComponents)
-		{
-			auto uuid = m_Registry.get<IDComponent>(entity).ID;
-			Entity e = target->CreateEntityWithID(uuid, "", true);
-		
-		}
-
-		CopyComponent<TagComponent>(target->m_Registry, m_Registry, enttMap);
-		CopyComponent<TransformComponent>(target->m_Registry, m_Registry, enttMap);
-		CopyComponent<CameraComponent>(target->m_Registry, m_Registry, enttMap);
-		CopyComponent<SpriteRendererComponent>(target->m_Registry, m_Registry, enttMap);
-	}
-
-
-
 }
