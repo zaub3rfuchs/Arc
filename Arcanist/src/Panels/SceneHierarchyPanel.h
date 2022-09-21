@@ -20,6 +20,9 @@ namespace ArcEngine {
 		Entity		GetSelectedEntity() const					{ return m_SelectionContext; }
 
 	private:
+		template<typename T>
+		void DisplayAddComponentEntry(const std::string& entryName);
+
 		void		DrawEntityNode(Entity entity);
 		void		DrawComponents(Entity entity);
 		void		DrawAddComponent(Entity entity);

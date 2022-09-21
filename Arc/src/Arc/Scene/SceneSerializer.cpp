@@ -298,9 +298,10 @@ namespace ArcEngine {
 		{
 			data = YAML::LoadFile(filepath);
 			
-		}catch (YAML::ParserException e)
+		}
+		catch (YAML::ParserException e)
 		{
-			std::cout << "wrong file format" << std::endl;
+			ARC_CORE_ERROR("Failed to load .arc file '{0}'\n     {1}", filepath, e.what());
 			return false;
 		}
 
