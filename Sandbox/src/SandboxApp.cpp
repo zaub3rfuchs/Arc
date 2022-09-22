@@ -9,8 +9,8 @@
 class Sandbox : public ArcEngine::Application
 {
 public:
-	Sandbox() 
-		: Application()
+	Sandbox(const ArcEngine::ApplicationSpecification& specification)
+		: ArcEngine::Application(specification)
 	{
 		//PushLayer(new ExampleLayer());
 		PushLayer(new Sandbox2D());
@@ -21,7 +21,10 @@ public:
 	}
 };
 
-ArcEngine::Application* ArcEngine::CreateApplication()
+ArcEngine::Application* ArcEngine::CreateApplication(ArcEngine::ApplicationCommandLineArgs args)
 {
-	return new Sandbox();
+	ApplicationSpecification spec;
+	spec.Name = "Sandbox";
+	spec.WorkingDirectory = "../Arcanist";
+	spec.CommandLineArgs = args;
 }

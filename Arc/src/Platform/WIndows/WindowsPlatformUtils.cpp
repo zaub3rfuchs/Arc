@@ -1,12 +1,12 @@
 #include "apch.h"
 #include "Arc/Utils/PlatformUtils.h"
+#include "Arc/Core/Application.h"
 
 #include <commdlg.h>
 #include <GLFW/glfw3.h>
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include <GLFW/glfw3native.h>
 
-#include "Arc/Core/Application.h"
 
 namespace ArcEngine {
 
@@ -58,5 +58,10 @@ namespace ArcEngine {
 	std::string FileDialogs::getFileName(const std::filesystem::path& path)
 	{
 		return path.filename().string();
+	}
+
+	float Time::GetTime()
+	{
+		return glfwGetTime();
 	}
 }

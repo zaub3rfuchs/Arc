@@ -1,14 +1,14 @@
 #include "EditorLayer.h"
+#include "Arc/Utils/PlatformUtils.h"
+#include "Arc/Scene/SceneSerializer.h"
+#include "Arc/Math/Math.h"
+
 #include "imgui/imgui.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include "Arc/Scene/SceneSerializer.h"
-#include "Arc/Utils/PlatformUtils.h"
 #include "ImGuizmo.h"
-#include "Scripts/Scripts.h"
 #include <iostream>
-#include "Arc/Math/Math.h"
 
 namespace ArcEngine {
 
@@ -34,7 +34,7 @@ namespace ArcEngine {
 		m_EditorScene = Ref<Scene>::Create();
 		m_ActiveScene = m_EditorScene;
 
-		auto commandLineArgs = Application::Get().GetCommandLineArgs();
+		auto commandLineArgs = Application::Get().GetSpecification().CommandLineArgs;
 		if (commandLineArgs.Count > 1)
 		{
 			auto sceneFilePath = commandLineArgs[1];
@@ -48,6 +48,8 @@ namespace ArcEngine {
 		m_FileMenu.SetViewportSize(m_ViewportSize);
 		m_FileMenu.SetSceneHierarchyPanel(&m_SceneHierarchyPanel);
 		m_FileMenu.SetActiveScene(m_ActiveScene);
+
+		Renderer2D::SetLineWidth(4.0f);
 	}
 
 	void EditorLayer::OnDetach()
@@ -125,7 +127,7 @@ namespace ArcEngine {
 		}
 		else
 		{
-			m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
+		//	m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
 		}
 
 		auto m_ViewportBounds = m_EditorViewport.getViewPortBounds();
@@ -230,6 +232,9 @@ namespace ArcEngine {
 				if (ImGui::MenuItem("Open...", "Ctrl+O"))
 					OpenScene();
 
+				if (ImGui::MenuItem("Save", "Ctrl+S"))
+					SaveScene();
+
 				if (ImGui::MenuItem("Save As...", "Ctrl+Shift+S"))
 					SaveSceneAs();
 
@@ -266,9 +271,11 @@ namespace ArcEngine {
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();
 
-			float windowWidth = (float)ImGui::GetWindowWidth();
-			float windowHeight = (float)ImGui::GetWindowHeight();
-			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+			/*float windowWidth = (float)ImGui::GetWindowWidth();
+			float windowHeight = (float)ImGui::GetWindowHeight();*/
+			ImGuizmo::SetRect(m_ViewportBounds[0].x, m_ViewportBounds[0].y, m_ViewportBounds[1].x - m_ViewportBounds[0].x, m_ViewportBounds[1].y - m_ViewportBounds[0].y);
+
+			//ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
 			// Editor camera
 			const glm::mat4& cameraProjection = m_EditorCamera.GetProjection();
@@ -401,8 +408,11 @@ namespace ArcEngine {
 
 
 	void EditorLayer::OnEvent(Event& e)
-	{
-		m_EditorCamera.OnEvent(e);
+	{;
+		if (m_SceneState == SceneState::Edit)
+		{
+			m_EditorCamera.OnEvent(e);
+		}
 
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<KeyPressedEvent>(ARC_BIND_EVENT_FN(EditorLayer::OnKeyPressed));
@@ -544,6 +554,13 @@ namespace ArcEngine {
 					Renderer2D::DrawCircle(transform, glm::vec4(0, 1, 0, 1), 0.01f);
 				}
 			}
+		}
+
+		// Draw selected entity outline 
+		if (Entity selectedEntity = m_SceneHierarchyPanel.GetSelectedEntity())
+		{
+			const TransformComponent& transform = selectedEntity.GetComponent<TransformComponent>();
+			Renderer2D::DrawRect(transform.GetTransform(), glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));
 		}
 
 		Renderer2D::EndScene();

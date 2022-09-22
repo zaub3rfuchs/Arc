@@ -1,9 +1,9 @@
 #pragma once
 
-#include <sstream>
-
 #include "Arc/Core/Core.h"
 #include "Arc/Events/Event.h"
+
+#include <sstream>
 
 namespace ArcEngine {
 

@@ -1,6 +1,7 @@
 #include "apch.h"
 #include "Scene.h"
 #include "Entity.h"
+
 #include "Components.h"
 #include "ScriptableEntity.h"
 #include "Arc/Renderer/Renderer2D.h"
@@ -398,7 +399,7 @@ namespace ArcEngine {
 	template<typename T>
 	void Scene::OnComponentAdded(Entity entity, T& component)
 	{
-		// static_assert(false);
+		static_assert(sizeof(T) == 0);
 	}
 	
 	template<>

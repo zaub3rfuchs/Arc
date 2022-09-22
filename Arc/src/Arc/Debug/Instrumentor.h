@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Arc/Core/Log.h"
+
 #include <string>
 #include <chrono>
 #include <algorithm>
@@ -9,7 +11,6 @@
 #include <mutex>
 #include <sstream>
 
-#include "Arc/Core/Log.h"
 
 namespace ArcEngine {
 	struct ProfileResult

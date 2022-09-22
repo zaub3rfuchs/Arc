@@ -10,13 +10,10 @@ namespace ArcEngine {
 	class Arcanist : public Application
 	{
 	public:
-		Arcanist(ApplicationCommandLineArgs args)
-			: Application("Arcanist", args)
+		Arcanist(const ApplicationSpecification& spec)
+			: Application(spec)
 		{
 			PushLayer(new EditorLayer());
-		}
-		~Arcanist()
-		{
 		}
 	};
 
@@ -26,7 +23,7 @@ namespace ArcEngine {
 		spec.Name = "Arcanist";
 		spec.CommandLineArgs = args;
 
-		return new Arcanist(args);
+		return new Arcanist(spec);
 	}
 
 }

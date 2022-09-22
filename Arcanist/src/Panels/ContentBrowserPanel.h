@@ -1,8 +1,8 @@
 #pragma once
 
-#include <filesystem>
-
 #include "Arc/Renderer/Texture.h"
+
+#include <filesystem>
 
 namespace ArcEngine {
 

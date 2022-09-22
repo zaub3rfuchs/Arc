@@ -1,7 +1,8 @@
 #pragma once
-#include <functional>
 #include "Arc/Core/Core.h"
 #include "Arc/Debug/Instrumentor.h"
+
+#include <functional>
 
 namespace ArcEngine {
 

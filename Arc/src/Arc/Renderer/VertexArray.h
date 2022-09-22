@@ -1,7 +1,8 @@
 #pragma once
 
-#include <memory>
 #include "Arc/Renderer/Buffer.h"
+
+#include <memory>
 
 namespace ArcEngine {
 

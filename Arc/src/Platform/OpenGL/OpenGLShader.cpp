@@ -1,5 +1,6 @@
 #include "apch.h"
 #include "Platform/OpenGL/OpenGLShader.h"
+#include "Arc/Core/Timer.h"
 
 #include <filesystem>
 #include <glad/glad.h>
@@ -11,7 +12,6 @@
 #include <spirv_cross/spirv_cross.hpp>
 #include <spirv_cross/spirv_glsl.hpp>
 
-#include "Arc/Core/Timer.h"
 
 namespace ArcEngine {
 
