@@ -37,8 +37,8 @@
     <Filter Include="src\Platform\OpenGL">
       <UniqueIdentifier>{35A49437-A105-7245-2A73-B8F796D3A804}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Platform\WIndows">
-      <UniqueIdentifier>{3BF19F37-2780-2901-D09E-3DFCBC0C3AA7}</UniqueIdentifier>
+    <Filter Include="src\Platform\Windows">
+      <UniqueIdentifier>{5B054582-4794-CE4B-F0B2-E246DC20DFF1}</UniqueIdentifier>
     </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
@@ -75,6 +75,9 @@
     <ClInclude Include="src\Arc\Core\Application.h">
       <Filter>src\Arc\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Arc\Core\Assert.h">
+      <Filter>src\Arc\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Arc\Core\Core.h">
       <Filter>src\Arc\Core</Filter>
     </ClInclude>
@@ -100,6 +103,12 @@
       <Filter>src\Arc\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Arc\Core\PlatformDetection.h">
+      <Filter>src\Arc\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Core\Ref.h">
+      <Filter>src\Arc\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Arc\Core\Timer.h">
       <Filter>src\Arc\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Arc\Core\Timestep.h">
@@ -171,6 +180,9 @@
     <ClInclude Include="src\Arc\Renderer\Texture.h">
       <Filter>src\Arc\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Arc\Renderer\UniformBuffer.h">
+      <Filter>src\Arc\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Arc\Renderer\VertexArray.h">
       <Filter>src\Arc\Renderer</Filter>
     </ClInclude>
@@ -213,11 +225,14 @@
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLUniformBuffer.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
-    <ClInclude Include="src\Platform\WIndows\WindowsWindow.h">
-      <Filter>src\Platform\WIndows</Filter>
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
+      <Filter>src\Platform\Windows</Filter>
     </ClInclude>
     <ClInclude Include="src\apch.h">
       <Filter>src</Filter>
@@ -1538,6 +1553,9 @@
     <ClCompile Include="src\Arc\Renderer\Texture.cpp">
       <Filter>src\Arc\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Arc\Renderer\UniformBuffer.cpp">
+      <Filter>src\Arc\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Arc\Renderer\VertexArray.cpp">
       <Filter>src\Arc\Renderer</Filter>
     </ClCompile>
@@ -1571,17 +1589,20 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLUniformBuffer.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\WIndows\WindowsInput.cpp">
-      <Filter>src\Platform\WIndows</Filter>
+    <ClCompile Include="src\Platform\Windows\WindowsInput.cpp">
+      <Filter>src\Platform\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\WIndows\WindowsPlatformUtils.cpp">
-      <Filter>src\Platform\WIndows</Filter>
+    <ClCompile Include="src\Platform\Windows\WindowsPlatformUtils.cpp">
+      <Filter>src\Platform\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="src\Platform\WIndows\WindowsWindow.cpp">
-      <Filter>src\Platform\WIndows</Filter>
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
+      <Filter>src\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\apch.cpp">
       <Filter>src</Filter>

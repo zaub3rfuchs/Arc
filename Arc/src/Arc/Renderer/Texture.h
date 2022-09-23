@@ -1,13 +1,21 @@
 
 #pragma once
 
-#include <string>
-
 #include "Arc/Core/Core.h"
 
-namespace ArcEngine {
+#include <string>
 
-	class Texture
+namespace ArcEngine {
+	// TODO
+	enum class TextureFormat
+	{
+		RED_INTEGER,
+		RGB,
+		RGBA,
+		RGBA8,
+	};
+
+	class Texture : public RefCounted
 	{
 	public:
 		virtual ~Texture() = default;
@@ -16,9 +24,13 @@ namespace ArcEngine {
 		virtual uint32_t GetHeight() const = 0;
 		virtual uint32_t GetRendererID() const = 0;
 
+		virtual const std::string& GetPath() const = 0;
+
 		virtual void SetData(void* data, uint32_t size) = 0;
 
 		virtual void Bind(uint32_t slot = 0) const = 0;
+
+		virtual bool IsLoaded() const = 0;
 
 		virtual bool operator==(const Texture& other) const = 0;
 	};
@@ -26,7 +38,7 @@ namespace ArcEngine {
 	class Texture2D : public Texture
 	{
 	public:
-		static Ref<Texture2D> Create(uint32_t width, uint32_t height);
+		static Ref<Texture2D> Create(TextureFormat format, uint32_t width, uint32_t height);
 		static Ref<Texture2D> Create(const std::string& path);
 	};
 

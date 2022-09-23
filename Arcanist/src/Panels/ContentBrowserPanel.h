@@ -1,8 +1,8 @@
 #pragma once
 
-#include <filesystem>
-
 #include "Arc/Renderer/Texture.h"
+
+#include <filesystem>
 
 namespace ArcEngine {
 
@@ -13,10 +13,10 @@ namespace ArcEngine {
 
 		void OnImGuiRender();
 	private:
-		std::filesystem::path m_CurrentDirectory;
+		std::filesystem::path	m_CurrentDirectory;
 
-		Ref<Texture2D>		m_DirectoryIcon;
-		Ref<Texture2D>		m_FileIcon;
+		Ref<Texture2D>			m_DirectoryIcon;
+		Ref<Texture2D>			m_FileIcon;
 	};
 
 }

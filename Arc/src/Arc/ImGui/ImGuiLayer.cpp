@@ -81,6 +81,8 @@ namespace ArcEngine {
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+		//TODO einkommentieren und fixen
+		//ImGuizmo::BeginFrame();
 	}
 
 	void ImGuiLayer::End()

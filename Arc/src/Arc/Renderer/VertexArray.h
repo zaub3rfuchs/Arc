@@ -1,11 +1,12 @@
 #pragma once
 
-#include <memory>
 #include "Arc/Renderer/Buffer.h"
+
+#include <memory>
 
 namespace ArcEngine {
 
-	class VertexArray
+	class VertexArray : public RefCounted
 	{
 	public:
 		virtual ~VertexArray() = default;

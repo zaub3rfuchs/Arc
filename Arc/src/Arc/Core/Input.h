@@ -8,7 +8,7 @@
 
 namespace ArcEngine {
 
-	class ARC_API Input
+	class Input
 	{
 	// Singleton pattern
 	public:

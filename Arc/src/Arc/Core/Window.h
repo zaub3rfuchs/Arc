@@ -1,9 +1,9 @@
 #pragma once
 
-#include <sstream>
-
 #include "Arc/Core/Core.h"
 #include "Arc/Events/Event.h"
+
+#include <sstream>
 
 namespace ArcEngine {
 
@@ -22,7 +22,7 @@ namespace ArcEngine {
 	};
 
 	// Interface representing a desktop system based Window
-	class ARC_API Window
+	class Window
 	{
 	public:
 		using EventCallbackFn = std::function<void(Event&)>;
@@ -39,11 +39,8 @@ namespace ArcEngine {
 		virtual void SetVSync(bool enabled) = 0;
 		virtual bool IsVSync() const = 0;
 
-
 		//does not know which native window it is (windows window / linux window)...
 		virtual void* GetNativeWindow() const = 0;
-
-
 
 		static Scope<Window> Create(const WindowProps& props = WindowProps());
 	};

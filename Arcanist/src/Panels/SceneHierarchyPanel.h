@@ -1,10 +1,8 @@
 #pragma once
 
 #include "Arc/Core/Core.h"
-#include "Arc/Core/Log.h"
 #include "Arc/Scene/Scene.h"
 #include "Arc/Scene/Entity.h"
-#include <filesystem>
 
 namespace ArcEngine {
 
@@ -14,18 +12,20 @@ namespace ArcEngine {
 		SceneHierarchyPanel() = default;
 		SceneHierarchyPanel(const Ref<Scene>& scene);
 
-		void SetContext(const Ref<Scene>& scene);
+		void		SetContext(const Ref<Scene>& scene);
 
-		void OnImGuiRender();
+		void		OnImGuiRender();
 
-		Entity GetSelectedEntity() const { return m_SelectionContext; }
-		void SetSelectedEntity(Entity entity) { m_SelectionContext = entity; };
+		void		SetSelectedEntity(Entity entity)			{ m_SelectionContext = entity; }
+		Entity		GetSelectedEntity() const					{ return m_SelectionContext; }
+
 	private:
-		void DrawEntityNode(Entity entity);
-		void DrawComponents(Entity entity);
+		template<typename T>
+		void DisplayAddComponentEntry(const std::string& entryName);
 
-
-		void DrawAddComponent(Entity entity);
+		void		DrawEntityNode(Entity entity);
+		void		DrawComponents(Entity entity);
+		void		DrawAddComponent(Entity entity);
 	private:
 		Ref<Scene>	m_Context;
 		Entity		m_SelectionContext;

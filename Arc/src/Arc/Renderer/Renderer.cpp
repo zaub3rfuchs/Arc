@@ -1,8 +1,5 @@
-
 #include "apch.h"
 #include "Arc/Renderer/Renderer.h"
-
-#include "Platform/OpenGL/OpenGLShader.h"
 #include "Arc/Renderer/Renderer2D.h"
 
 namespace ArcEngine {
@@ -34,14 +31,12 @@ namespace ArcEngine {
 	{
 	}
 
-	void Renderer::Submit(const ArcEngine::Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform)
+	void Renderer::Submit(Ref<Shader>& shader, const Ref<VertexArray>& vertexArray, const glm::mat4& transform)
 	{
 		shader->Bind();
-		//std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
-		//std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformMat4("u_ModelMatrix", transform);
-
 		shader->SetMat4("u_ViewProjection", s_SceneData->ViewProjectionMatrix);
 		shader->SetMat4("u_Transform", transform);
+
 		vertexArray->Bind();
 		RenderCommand::DrawIndexed(vertexArray);
 	}

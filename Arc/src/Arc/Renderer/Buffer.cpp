@@ -1,7 +1,6 @@
 
 #include "apch.h"
 #include "Arc/Renderer/Buffer.h"
-
 #include "Arc/Renderer/Renderer.h"
 
 #include "Platform/OpenGL/OpenGLBuffer.h"
@@ -14,7 +13,7 @@ namespace ArcEngine {
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:    ARC_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-		case RendererAPI::API::OpenGL:  return CreateRef<OpenGLVertexBuffer>(size);
+		case RendererAPI::API::OpenGL:  return Ref<OpenGLVertexBuffer>::Create(size);
 		}
 
 		ARC_CORE_ASSERT(false, "Unknown RendererAPI!");
@@ -26,7 +25,7 @@ namespace ArcEngine {
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:    ARC_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-		case RendererAPI::API::OpenGL:  return CreateRef<OpenGLVertexBuffer>(vertices, size);
+		case RendererAPI::API::OpenGL:  return Ref<OpenGLVertexBuffer>::Create(vertices, size);
 		}
 
 		ARC_CORE_ASSERT(false, "Unknown RendererAPI!");
@@ -38,7 +37,7 @@ namespace ArcEngine {
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:    ARC_CORE_ASSERT(false, "RendererAPI::None is currently not supported!"); return nullptr;
-		case RendererAPI::API::OpenGL:  return CreateRef<OpenGLIndexBuffer>(indices, size);
+		case RendererAPI::API::OpenGL:  return Ref<OpenGLIndexBuffer>::Create(indices, size);
 		}
 
 		ARC_CORE_ASSERT(false, "Unknown RendererAPI!");

@@ -1,7 +1,8 @@
 #pragma once
-#include <functional>
 #include "Arc/Core/Core.h"
 #include "Arc/Debug/Instrumentor.h"
+
+#include <functional>
 
 namespace ArcEngine {
 
@@ -35,7 +36,7 @@ namespace ArcEngine {
 
 #define EVENT_CLASS_CATEGORY(category) virtual int GetCategoryFlags() const override { return category; }
 
-	class ARC_API Event
+	class Event
 	{
 	//	friend class EventDispatcher;
 	public:

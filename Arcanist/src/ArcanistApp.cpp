@@ -10,19 +10,20 @@ namespace ArcEngine {
 	class Arcanist : public Application
 	{
 	public:
-		Arcanist()
-			: Application("Arcanist")
+		Arcanist(const ApplicationSpecification& spec)
+			: Application(spec)
 		{
 			PushLayer(new EditorLayer());
 		}
-		~Arcanist()
-		{
-		}
 	};
 
-	Application* CreateApplication()
+	Application* CreateApplication(ApplicationCommandLineArgs args)
 	{
-		return new Arcanist();
+		ApplicationSpecification spec;
+		spec.Name = "Arcanist";
+		spec.CommandLineArgs = args;
+
+		return new Arcanist(spec);
 	}
 
 }
